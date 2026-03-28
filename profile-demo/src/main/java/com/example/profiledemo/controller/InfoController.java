@@ -1,6 +1,7 @@
 package com.example.profiledemo.controller;
 
 import com.example.profiledemo.config.AppConfig;
+import com.example.profiledemo.config.DatabaseConfig;
 import org.springframework.cloud.context.refresh.ContextRefresher;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,16 @@ public class InfoController {
 
     private final ConfigurableEnvironment environment;
     private final AppConfig appConfig;
+    private final DatabaseConfig databaseConfig;
     private final ContextRefresher contextRefresher;
 
     public InfoController(ConfigurableEnvironment environment,
                           AppConfig appConfig,
+                          DatabaseConfig databaseConfig,
                           ContextRefresher contextRefresher) {
         this.environment = environment;
         this.appConfig = appConfig;
+        this.databaseConfig = databaseConfig;
         this.contextRefresher = contextRefresher;
     }
 
@@ -35,6 +39,15 @@ public class InfoController {
         result.put("envName", appConfig.getEnvName());
         result.put("featureFlag", appConfig.getFeatureFlag());
         result.put("welcome", appConfig.getWelcome());
+        return result;
+    }
+
+    @GetMapping("/datasource")
+    public Map<String, Object> datasource() {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("url", databaseConfig.getUrl());
+        result.put("username", databaseConfig.getUsername());
+        result.put("password", databaseConfig.getPassword());
         return result;
     }
 

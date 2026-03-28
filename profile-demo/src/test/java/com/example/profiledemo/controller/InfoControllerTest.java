@@ -57,4 +57,14 @@ class InfoControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(status().reason("仅支持切换到 dev、test、prod 环境"));
     }
+
+    @Test
+    void shouldReturnDatasourceConfig() throws Exception {
+        mockMvc.perform(get("/datasource"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.url").value("jdbc:mysql://localhost:3306/profile_demo"))
+                .andExpect(jsonPath("$.username").value("root"))
+                .andExpect(jsonPath("$.password").value("root"));
+    }
 }

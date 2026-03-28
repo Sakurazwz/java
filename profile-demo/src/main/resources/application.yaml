@@ -4,6 +4,11 @@ spring:
   profiles:
     active: dev
 
+datasource:
+  url: jdbc:mysql://localhost:3306/profile_demo
+  username: root
+  password: root
+
 management:
   endpoints:
     web:
