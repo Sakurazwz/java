@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: profile-demo-prod
+
+server:
+  port: 8082

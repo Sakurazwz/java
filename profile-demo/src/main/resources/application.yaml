@@ -1,3 +1,3 @@
 spring:
-  application:
-    name: profile-demo
+  profiles:
+    active: dev
