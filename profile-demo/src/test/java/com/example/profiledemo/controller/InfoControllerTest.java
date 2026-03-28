@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -43,8 +44,17 @@ class InfoControllerTest {
         mockMvc.perform(get("/switch/test"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.fromProfile").value("dev"))
                 .andExpect(jsonPath("$.targetProfile").value("test"))
+                .andExpect(jsonPath("$.supportedProfiles", containsInAnyOrder("dev", "test", "prod")))
                 .andExpect(jsonPath("$.restartRequired").value(true))
                 .andExpect(jsonPath("$.message").value("请重启应用并使用 --spring.profiles.active=test 以生效"));
+    }
+
+    @Test
+    void shouldRejectUnsupportedProfile() throws Exception {
+        mockMvc.perform(get("/switch/staging"))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason("仅支持切换到 dev、test、prod 环境"));
     }
 }
