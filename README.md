@@ -1,2 +1,0 @@
-# java
-to learn java

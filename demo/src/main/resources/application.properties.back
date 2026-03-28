@@ -1,0 +1,4 @@
+spring.application.name=demo
+spring.devtools.restart.enabled=
+spring.devtools.restart.exclude=static/**,public/**,templates/**,META-INF/maven/**,META-INF/resources/**
+logging.level.org.springframework.boot.devtools=INFO
