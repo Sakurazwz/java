@@ -68,19 +68,19 @@
    java -jar target/profile-demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
    ```
    
-   ![屏幕截图 2026-03-29 011504](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 011504.png)
+   
    
    ```
    java -jar target/profile-demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=test 
    ```
    
-   ![屏幕截图 2026-03-29 011532](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 011532.png)
+   
    
    ```
    java -jar target/profile-demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
    ```
    
-   ![屏幕截图 2026-03-29 011558](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 011558.png)
+   
    
 6. **日志与配置核验**  
    观察控制台是否显示激活 profile；核对数据库、邮件、端口等配置是否按环境切换。  
@@ -95,22 +95,42 @@
 1. **打包结果**  
    项目可成功打包为可执行 JAR。 
 
-    ![屏幕截图 2026-03-29 024428](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 024428.png)
+   
 
 2. **多环境启动结果**  
    在指定参数后，应用能够按 dev/test/prod 启动，日志显示对应 profile 生效。
 
-   ![屏幕截图 2026-03-29 025613](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 025613.png)
+   
 
 3. **配置验证结果**  
-   各环境的核心配置可按预期切换，说明多环境隔离有效。![屏幕截图 2026-03-29 024719](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 024719.png)
-
-   ![屏幕截图 2026-03-29 030014](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 030014.png)
-
-   ![屏幕截图 2026-03-29 030030](D:\Users\Xian\Pictures\Screenshots\屏幕截图 2026-03-29 030030.png)
+   各环境的核心配置可按预期切换，说明多环境隔离有效。
 
 4. **实验结论性分析**  
    本实验证明：规范的 Maven 打包流程 + 明确的 profile 分层 + 正确的 JDK 环境配置，是 Spring Boot 多环境开发与测试的关键。
+
+5.  **实现配置刷新（不重启应用）**
+
+   （1）原理说明
+
+   在 Spring Boot + Spring Cloud 场景中，可通过 `@RefreshScope` + Actuator 的刷新端点，在**不重启整个应用**的情况下，让指定 Bean 重新加载配置。  
+   当配置中心或本地环境变量变化后，触发刷新操作，`@RefreshScope` 标注的 Bean 会重新实例化并读取最新配置。
+
+   （2）依赖与配置要求
+
+   1. 需要 Spring Cloud 相关依赖（如项目已引入 `spring-cloud-starter`，可结合实际版本使用）。
+   2. 开启 Actuator 刷新端点（Spring Boot 2 常见是 `/actuator/refresh`；Spring Boot 3 + Spring Cloud 新方案常使用 `/actuator/env` + `/actuator/restart` 或 Spring Cloud Bus 方案，具体以当前依赖版本为准）。
+   3. 暴露必要管理端点，例如：
+      - `management.endpoints.web.exposure.include=health,info,refresh`
+
+6. 加载顺序与覆盖规则
+
+   可按“先基础，后激活；同优先级下后者覆盖前者”理解：
+
+   1. 先加载 `application.yml`（公共配置）。  
+   2. 再按 `spring.profiles.active` 指定的 profile 顺序加载：  
+      - 先 `application-dev.yml`
+      - 后 `application-redis.yml`
+   3. 若同名配置项冲突，后加载的值覆盖先加载的值，因此在 `dev,redis` 中，`redis` 对冲突键优先级更高。  
 
 ## 六、结论与体会
 
