@@ -38,7 +38,7 @@ public class InfoController {
         return result;
     }
 
-    @PostMapping("/switch/{profile}")
+    @GetMapping("/switch/{profile}")
     public Map<String, Object> switchProfile(@PathVariable String profile) {
         Set<String> allowed = Set.of("dev", "test", "prod");
         Map<String, Object> result = new LinkedHashMap<>();
