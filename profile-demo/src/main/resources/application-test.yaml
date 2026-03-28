@@ -1,6 +1,9 @@
 spring:
-  application:
-    name: profile-demo-test
+  config:
+    activate:
+      on-profile: test
 
-server:
-  port: 8081
+app:
+  env-name: test
+  feature-flag: false
+  welcome: "Hello from TEST"

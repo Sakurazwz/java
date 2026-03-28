@@ -1,6 +1,9 @@
 spring:
-  application:
-    name: profile-demo-prod
+  config:
+    activate:
+      on-profile: prod
 
-server:
-  port: 8082
+app:
+  env-name: prod
+  feature-flag: false
+  welcome: "Hello from PROD"

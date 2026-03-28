@@ -1,3 +1,11 @@
 spring:
+  application:
+    name: profile-demo
   profiles:
     active: dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,refresh

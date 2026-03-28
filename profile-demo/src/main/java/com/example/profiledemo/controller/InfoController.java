@@ -1,61 +1,73 @@
 package com.example.profiledemo.controller;
 
-import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import com.example.profiledemo.config.AppConfig;
+import org.springframework.cloud.context.refresh.ContextRefresher;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
+@RequestMapping
 public class InfoController {
 
-    private static final Set<String> SUPPORTED_PROFILES = Set.of("dev", "test", "prod");
-    private final Environment environment;
+    private final ConfigurableEnvironment environment;
+    private final AppConfig appConfig;
+    private final ContextRefresher contextRefresher;
 
-    public InfoController(Environment environment) {
+    public InfoController(ConfigurableEnvironment environment,
+                          AppConfig appConfig,
+                          ContextRefresher contextRefresher) {
         this.environment = environment;
+        this.appConfig = appConfig;
+        this.contextRefresher = contextRefresher;
     }
 
     @GetMapping("/info")
     public Map<String, Object> info() {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("environment", currentProfile());
-        result.put("port", environment.getProperty("server.port"));
-        result.put("applicationName", environment.getProperty("spring.application.name"));
+        result.put("activeProfiles", Arrays.asList(environment.getActiveProfiles()));
+        result.put("appName", environment.getProperty("spring.application.name", "unknown"));
+        result.put("port", environment.getProperty("local.server.port",
+                environment.getProperty("server.port", "unknown")));
+
+        // 业务配置（可热刷新）
+        result.put("envName", appConfig.getEnvName());
+        result.put("featureFlag", appConfig.getFeatureFlag());
+        result.put("welcome", appConfig.getWelcome());
         return result;
     }
 
-    @GetMapping("/switch/{profile}")
+    @PostMapping("/switch/{profile}")
     public Map<String, Object> switchProfile(@PathVariable String profile) {
-        String normalizedProfile = profile == null ? "" : profile.trim().toLowerCase();
-        if (!SUPPORTED_PROFILES.contains(normalizedProfile)) {
-            throw new ResponseStatusException(
-                    org.springframework.http.HttpStatus.BAD_REQUEST,
-                    "仅支持切换到 dev、test、prod 环境");
+        Set<String> allowed = Set.of("dev", "test", "prod");
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        if (!allowed.contains(profile)) {
+            result.put("success", false);
+            result.put("message", "不支持的环境：" + profile + "，仅支持 dev/test/prod");
+            return result;
         }
 
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("fromProfile", currentProfile());
-        result.put("targetProfile", normalizedProfile);
-        result.put("supportedProfiles", SUPPORTED_PROFILES);
-        result.put("message", "请重启应用并使用 --spring.profiles.active=" + normalizedProfile + " 以生效");
-        result.put("restartRequired", true);
+        // 仅切“业务配置语义”：改 activeProfiles + refresh
+        environment.setActiveProfiles(profile);
+        Set<String> keys = contextRefresher.refresh();
+
+        result.put("success", true);
+        result.put("activeProfilesNow", Arrays.asList(environment.getActiveProfiles()));
+        result.put("refreshedKeysCount", keys.size());
+        result.put("refreshedKeys", keys);
+        result.put("message", "已尝试热刷新业务配置（端口不会变化）");
         return result;
     }
 
-    private String currentProfile() {
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles.length > 0) {
-            return Arrays.stream(activeProfiles)
-                    .filter(SUPPORTED_PROFILES::contains)
-                    .findFirst()
-                    .orElse(activeProfiles[0]);
-        }
-        return environment.getProperty("spring.profiles.active", "default");
+    @PostMapping("/refresh-now")
+    public Map<String, Object> refreshNow() {
+        Set<String> keys = contextRefresher.refresh();
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("success", true);
+        result.put("refreshedKeysCount", keys.size());
+        result.put("refreshedKeys", keys);
+        return result;
     }
 }
