@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: profile-demo-test
+
+server:
+  port: 8081
