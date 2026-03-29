@@ -91,10 +91,10 @@
        "test"
      ],
      "appName": "profile-demo",
-     "port": "8080",
-     "envName": "dev",
-     "featureFlag": true,
-     "welcome": "Hello from DEV"
+     "port": "8082",
+     "envName": "test",
+     "featureFlag": false,
+     "welcome": "Hello from TEST"
    }
    ```
    
@@ -108,16 +108,13 @@
        "prod"
      ],
      "appName": "profile-demo",
-     "port": "8080",
-     "envName": "dev",
-     "featureFlag": true,
-     "welcome": "Hello from DEV"
+     "port": "8081",
+     "envName": "prod",
+     "featureFlag": false,
+     "welcome": "Hello from PROD"
    }
    ```
    
-6. **日志与配置核验**  
-   观察控制台是否显示激活 profile；核对数据库、邮件、端口等配置是否按环境切换。  
-
 7. **问题排查记录**  
    
    - 遇到 JNI/签名报错后，确认应运行重打包后的 jar（非 `.jar.original`）。  

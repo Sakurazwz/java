@@ -66,3 +66,97 @@
 2026-03-29 07:07:56.081 [main] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
 2026-03-29 07:07:57.925 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
 2026-03-29 07:07:57.996 [main] INFO  c.example.demo.DemoApplicationTests - Started DemoApplicationTests in 3.429 seconds (process running for 4.223)
+2026-03-29 15:30:22.454 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-29 15:30:22.484 [restartedMain] INFO  com.example.demo.DemoApplication - Starting DemoApplication using Java 21.0.10 with PID 2224 (D:\Users\Xian\Desktop\java\demo\target\classes started by Xian in D:\Users\Xian\Desktop\java\demo)
+2026-03-29 15:30:22.484 [restartedMain] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v3.5.11, Spring v6.2.16
+2026-03-29 15:30:22.484 [restartedMain] INFO  com.example.demo.DemoApplication - The following 1 profile is active: "dev"
+2026-03-29 15:30:22.509 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-29 15:30:22.509 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-29 15:30:23.203 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.example.demo.config.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-03-29 15:30:23.211 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-03-29 15:30:23.548 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-29 15:30:23.557 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-29 15:30:23.558 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-29 15:30:23.558 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-03-29 15:30:23.590 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-29 15:30:23.590 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1081 ms
+2026-03-29 15:30:24.515 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2026-03-29 15:30:24.519 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-03-29 15:30:24.546 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-29 15:30:24.548 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-03-29 15:30:24.560 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-29 15:30:24.573 [restartedMain] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-03-29 15:30:32.329 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-29 15:30:32.354 [restartedMain] INFO  com.example.demo.DemoApplication - Starting DemoApplication using Java 21.0.10 with PID 19640 (D:\Users\Xian\Desktop\java\demo\target\classes started by Xian in D:\Users\Xian\Desktop\java\demo)
+2026-03-29 15:30:32.354 [restartedMain] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v3.5.11, Spring v6.2.16
+2026-03-29 15:30:32.355 [restartedMain] INFO  com.example.demo.DemoApplication - The following 1 profile is active: "dev"
+2026-03-29 15:30:32.377 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-29 15:30:32.377 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-29 15:30:32.954 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.example.demo.config.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-03-29 15:30:32.960 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-03-29 15:30:33.254 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-29 15:30:33.262 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-29 15:30:33.263 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-29 15:30:33.263 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-03-29 15:30:33.291 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-29 15:30:33.292 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 915 ms
+2026-03-29 15:30:34.122 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2026-03-29 15:30:34.127 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-03-29 15:30:34.151 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-29 15:30:34.154 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-03-29 15:30:34.165 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-29 15:30:34.175 [restartedMain] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-03-29 15:30:45.907 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-29 15:30:45.933 [restartedMain] INFO  com.example.demo.DemoApplication - Starting DemoApplication using Java 21.0.10 with PID 16008 (D:\Users\Xian\Desktop\java\demo\target\classes started by Xian in D:\Users\Xian\Desktop\java\demo)
+2026-03-29 15:30:45.933 [restartedMain] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v3.5.11, Spring v6.2.16
+2026-03-29 15:30:45.933 [restartedMain] INFO  com.example.demo.DemoApplication - The following 1 profile is active: "dev"
+2026-03-29 15:30:45.956 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-29 15:30:45.956 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-29 15:30:46.545 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.example.demo.config.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-03-29 15:30:46.550 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-03-29 15:30:46.844 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-29 15:30:46.851 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-29 15:30:46.851 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-29 15:30:46.851 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-03-29 15:30:46.881 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-29 15:30:46.881 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 925 ms
+2026-03-29 15:30:47.694 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-03-29 15:30:47.698 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-03-29 15:30:47.725 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-29 15:30:47.734 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-29 15:30:47.741 [restartedMain] INFO  com.example.demo.DemoApplication - Started DemoApplication in 2.126 seconds (process running for 2.455)
+2026-03-29 15:30:47.901 [RMI TCP Connection(1)-192.168.137.136] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-29 15:30:47.901 [RMI TCP Connection(1)-192.168.137.136] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-29 15:30:47.902 [RMI TCP Connection(1)-192.168.137.136] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-03-29 15:31:32.181 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-29 15:31:32.184 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
