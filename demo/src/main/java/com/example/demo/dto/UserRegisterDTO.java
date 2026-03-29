@@ -48,7 +48,7 @@ public class UserRegisterDTO {
     @Schema(description = "性别", example = "MALE")
     private Gender gender;
 
-    @Schema(description = "身份证号", example = "110101199003071234")
+    @Schema(description = "身份证号")
     @IdCard
     private String idCard;
 }
