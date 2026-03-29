@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.annotation.Log;
+import com.example.demo.aspect.DemoAspect;
 import com.example.demo.controller.UserController;
 import com.example.demo.dto.UserRegisterDTO;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -50,6 +52,19 @@ class LoggingAndCorsConfigTests {
                         .header("Origin", "http://localhost:3000")
                         .header("Access-Control-Request-Method", "GET"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldImplementFourCommonAdviceTypesInDemoAspect() throws Exception {
+        Method beforeMethod = DemoAspect.class.getMethod("before", org.aspectj.lang.JoinPoint.class);
+        Method afterMethod = DemoAspect.class.getMethod("after", org.aspectj.lang.JoinPoint.class);
+        Method afterReturningMethod = DemoAspect.class.getMethod("afterReturning", org.aspectj.lang.JoinPoint.class, Object.class);
+        Method afterThrowingMethod = DemoAspect.class.getMethod("afterThrowing", org.aspectj.lang.JoinPoint.class, Exception.class);
+
+        assertNotNull(beforeMethod.getAnnotation(org.aspectj.lang.annotation.Before.class));
+        assertNotNull(afterMethod.getAnnotation(org.aspectj.lang.annotation.After.class));
+        assertNotNull(afterReturningMethod.getAnnotation(org.aspectj.lang.annotation.AfterReturning.class));
+        assertNotNull(afterThrowingMethod.getAnnotation(org.aspectj.lang.annotation.AfterThrowing.class));
     }
 
     private void assertLogAnnotation(Method method, String expectedValue, String expectedModule) {
