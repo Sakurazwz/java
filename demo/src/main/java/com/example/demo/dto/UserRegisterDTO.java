@@ -26,7 +26,7 @@ public class UserRegisterDTO {
             message = "密码必须包含大小写字母和数字，长度8-20位")
     private String password;
 
-    @Schema(description = "确认密码", example = "Password123")
+    @Schema(description = "确认密码", example = "Password123", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "确认密码不能为空")
     private String confirmPassword;
 
@@ -44,6 +44,6 @@ public class UserRegisterDTO {
     @Max(value = 120, message = "年龄必须小于120")
     private Integer age;
 
-    @Schema(description = "性别", example = "MALE")
+    @Schema(description = "性别", example = "MALE", allowableValues = {"MALE", "FEMALE", "OTHER"})
     private Gender gender;
 }
