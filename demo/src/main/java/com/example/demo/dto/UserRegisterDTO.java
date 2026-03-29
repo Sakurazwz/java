@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import com.example.demo.enums.Gender;
-import com.example.demo.validation.IdCard;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -47,8 +46,4 @@ public class UserRegisterDTO {
 
     @Schema(description = "性别", example = "MALE")
     private Gender gender;
-
-    @Schema(description = "身份证号")
-    @IdCard
-    private String idCard;
 }
