@@ -17,7 +17,7 @@ public @interface PasswordStrength {
     /**
      * 错误消息
      */
-    String message() default "密码必须包含大小写字母和数字，长度8-20位";
+    String message() default "{validation.password.strength}";
 
     /**
      * 分组（用于分组校验）

@@ -16,7 +16,7 @@ public @interface EnumValue {
     /**
      * 错误消息
      */
-    String message() default "值必须在指定的枚举范围内";
+    String message() default "{validation.enum.invalid}";
 
     /**
      * 分组

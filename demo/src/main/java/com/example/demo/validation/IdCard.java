@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IdCard {
 
-    String message() default "身份证号格式不正确";
+    String message() default "{validation.idcard.format}";
 
     Class<?>[] groups() default {};
 
