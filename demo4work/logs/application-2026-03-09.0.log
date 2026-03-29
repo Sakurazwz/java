@@ -1,0 +1,9 @@
+2026-03-09T11:14:22.884+08:00  INFO 3456 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Starting DemoApplication using Java 21.0.7 with PID 3456 (C:\Users\USER\Downloads\demo\target\classes started by USER in C:\Users\USER\Downloads\demo)
+2026-03-09T11:14:22.886+08:00  INFO 3456 --- [demo] [restartedMain] com.example.demo.DemoApplication         : The following 1 profile is active: "prod"
+2026-03-09T11:14:23.662+08:00  INFO 3456 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Started DemoApplication in 1.213 seconds (process running for 1.649)
+2026-03-09T11:18:43.438+08:00  INFO 5156 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Starting DemoApplication using Java 21.0.7 with PID 5156 (C:\Users\USER\Downloads\demo\target\classes started by USER in C:\Users\USER\Downloads\demo)
+2026-03-09T11:18:43.439+08:00  INFO 5156 --- [demo] [restartedMain] com.example.demo.DemoApplication         : The following 1 profile is active: "prod"
+2026-03-09T11:18:44.350+08:00  INFO 5156 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Started DemoApplication in 1.271 seconds (process running for 1.675)
+2026-03-09T11:25:30.613+08:00  INFO 7964 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Starting DemoApplication using Java 21.0.7 with PID 7964 (C:\Users\USER\Downloads\demo\target\classes started by USER in C:\Users\USER\Downloads\demo)
+2026-03-09T11:25:30.614+08:00  INFO 7964 --- [demo] [restartedMain] com.example.demo.DemoApplication         : The following 1 profile is active: "prod"
+2026-03-09T11:25:31.371+08:00  INFO 7964 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Started DemoApplication in 1.055 seconds (process running for 1.434)
