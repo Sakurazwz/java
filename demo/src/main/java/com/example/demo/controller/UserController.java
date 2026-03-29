@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.Log;
 import com.example.demo.common.Result;
 import com.example.demo.dto.LoginDTO;
 import com.example.demo.dto.UserRegisterDTO;
@@ -38,6 +39,7 @@ public class UserController {
      * 查询单个用户
      */
     @GetMapping("/get")
+    @Log(value = "查询单个用户", module = "用户管理")
     @Operation(
             summary = "查询单个用户",
             description = "根据用户ID查询用户信息",
@@ -65,6 +67,7 @@ public class UserController {
      * 查询用户列表
      */
     @GetMapping("/list")
+    @Log(value = "查询用户列表", module = "用户管理")
     @Operation(summary = "查询用户列表", description = "查询所有用户信息，支持分页")
     @ApiResponse(responseCode = "200", description = "查询成功")
     public Result<List<User>> getUserList() {
@@ -76,6 +79,7 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
+    @Log(value = "用户注册", module = "用户管理")
     @Operation(summary = "用户注册", description = "新用户注册（密码使用BCrypt加密）")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @Content(
