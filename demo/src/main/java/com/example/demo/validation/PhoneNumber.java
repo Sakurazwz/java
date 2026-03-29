@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PhoneNumber {
 
-    String message() default "手机号格式不正确";
+    String message() default "{validation.phone.format}";
 
     Class<?>[] groups() default {};
 
