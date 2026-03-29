@@ -26,7 +26,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(com.example.demo.exception.BusinessException.class)
     public Result<?> handleBusinessException(com.example.demo.exception.BusinessException e, HttpServletRequest request) {
-        log.warn("业务异常: {}, 请求路径: {}", e.getMessage(), request.getRequestURI());
+        String requestPath = request.getRequestURI();
+        String queryString = request.getQueryString();
+        String params = queryString != null ? queryString : "";
+        e.withRequestPath(requestPath).withRequestParams(params);
+        log.warn("业务异常: [{}] {}, 请求路径: {}, 请求参数: {}", e.getCode(), e.getMessage(), requestPath, params);
         return Result.error(e.getCode(), e.getMessage());
     }
 
@@ -35,11 +39,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result<?> handleValidationException(MethodArgumentNotValidException e) {
+    public Result<?> handleValidationException(MethodArgumentNotValidException e, HttpServletRequest request) {
         String errorMsg = e.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining("; "));
-        log.warn("参数校验失败: {}", errorMsg);
+        log.warn("参数校验失败: {}, 请求路径: {}", errorMsg, request.getRequestURI());
         return Result.error(ResultCode.BAD_REQUEST.getCode(), errorMsg);
     }
 
@@ -48,11 +52,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result<?> handleBindException(BindException e) {
+    public Result<?> handleBindException(BindException e, HttpServletRequest request) {
         String errorMsg = e.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining("; "));
-        log.warn("参数绑定失败: {}", errorMsg);
+        log.warn("参数绑定失败: {}, 请求路径: {}", errorMsg, request.getRequestURI());
         return Result.error(ResultCode.BAD_REQUEST.getCode(), errorMsg);
     }
 
@@ -61,8 +65,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result<?> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.warn("非法参数: {}", e.getMessage());
+    public Result<?> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
+        log.warn("非法参数: {}, 请求路径: {}", e.getMessage(), request.getRequestURI());
         return Result.error(ResultCode.BAD_REQUEST.getCode(), e.getMessage());
     }
 

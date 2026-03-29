@@ -33,6 +33,11 @@ public class User {
     private String password;
 
     /**
+     * 身份证号
+     */
+    private String idCard;
+
+    /**
      * 年龄
      */
     private Integer age;

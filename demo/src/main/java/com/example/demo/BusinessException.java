@@ -19,6 +19,16 @@ public class BusinessException extends RuntimeException {
      */
     private final String message;
 
+    /**
+     * 请求路径（由全局异常处理器填充）
+     */
+    private String requestPath;
+
+    /**
+     * 请求参数（由全局异常处理器填充）
+     */
+    private String requestParams;
+
     public BusinessException(String message) {
         super(message);
         this.code = 400;
@@ -41,5 +51,21 @@ public class BusinessException extends RuntimeException {
         super(message);
         this.code = resultCode.getCode();
         this.message = message;
+    }
+
+    /**
+     * 设置请求路径
+     */
+    public BusinessException withRequestPath(String requestPath) {
+        this.requestPath = requestPath;
+        return this;
+    }
+
+    /**
+     * 设置请求参数
+     */
+    public BusinessException withRequestParams(String requestParams) {
+        this.requestParams = requestParams;
+        return this;
     }
 }
