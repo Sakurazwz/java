@@ -3,7 +3,10 @@ spring:
     activate:
       on-profile: prod
 
+
 app:
   env-name: prod
   feature-flag: false
   welcome: "Hello from PROD"
+server:
+  port: 8081

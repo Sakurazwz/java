@@ -62,25 +62,58 @@
    生成 `target/profile-demo-0.0.1-SNAPSHOT.jar`。  
 
 5. **启动多环境并验证**  
-   分别执行：  
+   在项目根目录文件下分别执行并且浏览器访问对应的端口：  
    
-   ```
+   ```cmd
    java -jar target/profile-demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
    ```
    
-   
-   
+   ```json
+   {
+     "activeProfiles": [
+       "dev"
+     ],
+     "appName": "profile-demo",
+     "port": "8080",
+     "envName": "dev",
+     "featureFlag": true,
+     "welcome": "Hello from DEV"
+   }
    ```
+   
+   ```cmd
    java -jar target/profile-demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=test 
    ```
    
-   
-   
+   ```json
+   {
+     "activeProfiles": [
+       "test"
+     ],
+     "appName": "profile-demo",
+     "port": "8080",
+     "envName": "dev",
+     "featureFlag": true,
+     "welcome": "Hello from DEV"
+   }
    ```
+   
+   ```cmd
    java -jar target/profile-demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
    ```
    
-   
+   ```json
+   {
+     "activeProfiles": [
+       "prod"
+     ],
+     "appName": "profile-demo",
+     "port": "8080",
+     "envName": "dev",
+     "featureFlag": true,
+     "welcome": "Hello from DEV"
+   }
+   ```
    
 6. **日志与配置核验**  
    观察控制台是否显示激活 profile；核对数据库、邮件、端口等配置是否按环境切换。  
@@ -93,27 +126,68 @@
 ## 五、实验结果与分析
 
 1. **打包结果**  
-   项目可成功打包为可执行 JAR。 
+
+   执行：  
+
+   ```cmd
+   mvnw -U clean package -DskipTests
+   ```
+
+   项目可成功打包为可执行 JAR：
+
+   profile-demo-0.0.1-SNAPSHOT.jar。 
 
    
 
 2. **多环境启动结果**  
-   在指定参数后，应用能够按 dev/test/prod 启动，日志显示对应 profile 生效。
+   在指定参数后，应用能够按 dev/test/prod 启动，日志显示
 
-   
+   ```cmd
+   INFO 11192 --- [profile-demo] [  restartedMain] c.e.profiledemo.ProfileDemoApplication: The following 1 profile is active: "dev"#根据环境变化
+   ```
+
+   对应环境的的profile 生效。
 
 3. **配置验证结果**  
-   各环境的核心配置可按预期切换，说明多环境隔离有效。
+   访问/switch/{profile}，显示：
+
+   ```json
+   {
+     "success": true,
+     "activeProfilesNow": [
+       "prod"//显示切换的环境
+     ],
+     "refreshedKeysCount": 0,
+     "refreshedKeys": [],
+     "message": "已尝试热刷新业务配置（端口不会变化）"
+   }
+   ```
+
+   再次访问/info，显示：
+
+   ```json
+   {
+     "activeProfiles": [
+       "prod"
+     ],
+     "appName": "profile-demo",
+     "port": "8080",
+     "envName": "dev",
+     "featureFlag": true,
+     "welcome": "Hello from DEV"
+   }
+   ```
 
 4. **实验结论性分析**  
    本实验证明：规范的 Maven 打包流程 + 明确的 profile 分层 + 正确的 JDK 环境配置，是 Spring Boot 多环境开发与测试的关键。
 
-5.  **实现配置刷新（不重启应用）**
+5. **实现配置刷新（不重启应用）**
 
    （1）原理说明
 
-   在 Spring Boot + Spring Cloud 场景中，可通过 `@RefreshScope` + Actuator 的刷新端点，在**不重启整个应用**的情况下，让指定 Bean 重新加载配置。  
-   当配置中心或本地环境变量变化后，触发刷新操作，`@RefreshScope` 标注的 Bean 会重新实例化并读取最新配置。
+   ​	在 Spring Boot + Spring Cloud 场景中，可通过 `@RefreshScope` + Actuator 的刷新端点，在不重启整个应用的情况下，让指定 Bean 重新加载配置。  
+
+   ​	当配置中心或本地环境变量变化后，触发刷新操作，`@RefreshScope` 标注的 Bean 会重新实例化并读取最新配置。
 
    （2）依赖与配置要求
 

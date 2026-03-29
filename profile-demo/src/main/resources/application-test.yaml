@@ -7,3 +7,6 @@ app:
   env-name: test
   feature-flag: false
   welcome: "Hello from TEST"
+
+server:
+  port: 8082
