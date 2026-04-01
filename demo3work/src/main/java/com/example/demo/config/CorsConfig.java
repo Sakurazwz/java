@@ -16,8 +16,8 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // 允许所有来源（生产环境应指定具体域名）
-        config.addAllowedOriginPattern("*");
+        // 只允许前端开发服务器
+        config.addAllowedOrigin("http://localhost:5173");
 
         // 允许携带凭证
         config.setAllowCredentials(true);
