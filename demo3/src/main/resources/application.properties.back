@@ -1,0 +1,13 @@
+# DevTools 配置
+
+# 启用热部署（默认启用）
+spring.devtools.restart.enabled=true
+
+# 排除不触发重启的资源
+spring.devtools.restart.exclude=static/**,public/**,templates/**,META-INF/maven/**,META-INF/resources/**
+
+# LiveReload（浏览器自动刷新, 需要安装插件)
+spring.devtools.livereload.enabled=true
+
+# 日志级别
+logging.level.org.springframework.boot.devtools=INFO

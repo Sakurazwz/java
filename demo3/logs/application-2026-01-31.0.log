@@ -1,3 +1,0 @@
-2026-01-31T16:58:27.793+08:00  INFO 39444 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Starting DemoApplication using Java 21.0.7 with PID 39444 (D:\fwpractice\class1\demo\target\classes started by 63211 in D:\fwpractice\class1\demo)
-2026-01-31T16:58:27.793+08:00  INFO 39444 --- [demo] [restartedMain] com.example.demo.DemoApplication         : The following 1 profile is active: "prod"
-2026-01-31T16:58:28.049+08:00  INFO 39444 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Started DemoApplication in 0.311 seconds (process running for 63.762)
