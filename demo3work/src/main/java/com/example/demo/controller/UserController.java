@@ -71,7 +71,6 @@ public class UserController {
     /**
      * 测试异常
      */
-    @Log(value = "测试异常", module = "测试")
     @GetMapping("/exception")
     public Result<String> exception() {
         int i = 1 / 0;
