@@ -1,0 +1,52 @@
+2026-03-28 23:22:49.697 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-28 23:22:49.731 [restartedMain] INFO  com.example.demo.DemoApplication - Starting DemoApplication using Java 21.0.10 with PID 16028 (D:\Users\Xian\Desktop\learnjava\demo\target\classes started by Xian in D:\Users\Xian\Desktop\learnjava\demo)
+2026-03-28 23:22:49.731 [restartedMain] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v3.5.11, Spring v6.2.16
+2026-03-28 23:22:49.731 [restartedMain] INFO  com.example.demo.DemoApplication - The following 1 profile is active: "dev"
+2026-03-28 23:22:49.754 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-28 23:22:49.754 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-28 23:22:50.414 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.example.demo.config.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-03-28 23:22:50.420 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-03-28 23:22:50.740 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-28 23:22:50.747 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-28 23:22:50.748 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-28 23:22:50.748 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-03-28 23:22:50.807 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-28 23:22:50.807 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1053 ms
+2026-03-28 23:22:51.540 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-03-28 23:22:51.546 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-03-28 23:22:51.573 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-28 23:22:51.587 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-28 23:22:51.594 [restartedMain] INFO  com.example.demo.DemoApplication - Started DemoApplication in 2.277 seconds (process running for 2.886)
+2026-03-28 23:22:52.003 [RMI TCP Connection(4)-192.168.137.7] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-28 23:22:52.004 [RMI TCP Connection(4)-192.168.137.7] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-28 23:22:52.005 [RMI TCP Connection(4)-192.168.137.7] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-03-28 23:22:52.531 [http-nio-8080-exec-1] INFO  c.e.d.aspect.PointcutPracticeAspect - ✅ 练习8：匹配到了 @GetMapping 注解的方法
+2026-03-28 23:22:52.674 [http-nio-8080-exec-8] INFO  c.e.d.aspect.PointcutPracticeAspect - ✅ 练习8：匹配到了 @GetMapping 注解的方法
+2026-03-28 23:22:52.692 [http-nio-8080-exec-10] INFO  c.e.d.aspect.PointcutPracticeAspect - ✅ 练习8：匹配到了 @GetMapping 注解的方法
+2026-03-28 23:22:52.990 [http-nio-8080-exec-10] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 298 ms
+2026-03-28 23:38:15.542 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-28 23:38:15.545 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-28 23:40:39.042 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-28 23:40:39.070 [restartedMain] INFO  com.example.demo.DemoApplication - Starting DemoApplication using Java 21.0.10 with PID 16400 (D:\Users\Xian\Desktop\learnjava\demo\target\classes started by Xian in D:\Users\Xian\Desktop\learnjava\demo)
+2026-03-28 23:40:39.070 [restartedMain] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v3.5.11, Spring v6.2.16
+2026-03-28 23:40:39.071 [restartedMain] INFO  com.example.demo.DemoApplication - The following 1 profile is active: "dev"
+2026-03-28 23:40:39.096 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-28 23:40:39.096 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-28 23:40:39.730 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.example.demo.config.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-03-28 23:40:39.736 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-03-28 23:40:40.057 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-28 23:40:40.065 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-28 23:40:40.066 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-28 23:40:40.066 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-03-28 23:40:40.118 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-28 23:40:40.118 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1021 ms
+2026-03-28 23:40:40.826 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-03-28 23:40:40.832 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-03-28 23:40:40.857 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-28 23:40:40.870 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-28 23:40:40.877 [restartedMain] INFO  com.example.demo.DemoApplication - Started DemoApplication in 2.166 seconds (process running for 2.665)
+2026-03-28 23:40:41.348 [RMI TCP Connection(3)-192.168.137.7] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-28 23:40:41.349 [RMI TCP Connection(3)-192.168.137.7] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-28 23:40:41.350 [RMI TCP Connection(3)-192.168.137.7] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-03-28 23:41:04.327 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-28 23:41:04.330 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
