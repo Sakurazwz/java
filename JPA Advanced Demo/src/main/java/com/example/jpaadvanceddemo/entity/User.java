@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -44,8 +45,11 @@ public class User {
     @Column(length = 20)
     private String phone;
 
-    @Column(columnDefinition = "TINYINT DEFAULT 1")
-    private Integer status = 1;  // 0-禁用，1-正常
+
+
+    @Column(nullable = false)
+    @ColumnDefault("1")
+    private Integer status = 1; // 0-禁用，1-正常
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

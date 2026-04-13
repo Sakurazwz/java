@@ -9,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -27,8 +26,6 @@ public class DataInitializer implements CommandLineRunner {
 
         System.out.println("开始初始化测试数据...");
 
-        LocalDateTime now = LocalDateTime.now();
-
         // 创建用户1及其详情
         User user1 = new User();
         user1.setUsername("zhangsan");
@@ -36,8 +33,6 @@ public class DataInitializer implements CommandLineRunner {
         user1.setEmail("zhangsan@example.com");
         user1.setPhone("13800138000");
         user1.setStatus(1);
-        user1.setCreateTime(now);
-        user1.setUpdateTime(now);
 
         UserProfile profile1 = new UserProfile();
         profile1.setRealName("张三");
@@ -54,8 +49,6 @@ public class DataInitializer implements CommandLineRunner {
         user2.setEmail("lisi@example.com");
         user2.setPhone("13800138001");
         user2.setStatus(1);
-        user2.setCreateTime(now);
-        user2.setUpdateTime(now);
 
         UserProfile profile2 = new UserProfile();
         profile2.setRealName("李四");
@@ -72,8 +65,6 @@ public class DataInitializer implements CommandLineRunner {
         user3.setEmail("wangwu@example.com");
         user3.setPhone("13800138002");
         user3.setStatus(1);
-        user3.setCreateTime(now);
-        user3.setUpdateTime(now);
 
         UserProfile profile3 = new UserProfile();
         profile3.setRealName("王五");
