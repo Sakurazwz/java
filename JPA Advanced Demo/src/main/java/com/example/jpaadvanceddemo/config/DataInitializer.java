@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -19,20 +20,22 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        // 检查是否已有数据，避免重复初始化
         if (userRepository.count() > 0) {
             return;
         }
 
         System.out.println("开始初始化测试数据...");
 
-        // 创建用户1及其详情
+        LocalDateTime now = LocalDateTime.now();
+
         User user1 = new User();
         user1.setUsername("zhangsan");
         user1.setPassword("123456");
         user1.setEmail("zhangsan@example.com");
         user1.setPhone("13800138000");
         user1.setStatus(1);
+        user1.setCreateTime(now);
+        user1.setUpdateTime(now);
 
         UserProfile profile1 = new UserProfile();
         profile1.setRealName("张三");
@@ -42,13 +45,14 @@ public class DataInitializer implements CommandLineRunner {
         profile1.setUser(user1);
         user1.setUserProfile(profile1);
 
-        // 创建用户2及其详情
         User user2 = new User();
         user2.setUsername("lisi");
         user2.setPassword("123456");
         user2.setEmail("lisi@example.com");
         user2.setPhone("13800138001");
         user2.setStatus(1);
+        user2.setCreateTime(now);
+        user2.setUpdateTime(now);
 
         UserProfile profile2 = new UserProfile();
         profile2.setRealName("李四");
@@ -58,13 +62,14 @@ public class DataInitializer implements CommandLineRunner {
         profile2.setUser(user2);
         user2.setUserProfile(profile2);
 
-        // 创建用户3及其详情
         User user3 = new User();
         user3.setUsername("wangwu");
         user3.setPassword("123456");
         user3.setEmail("wangwu@example.com");
         user3.setPhone("13800138002");
         user3.setStatus(1);
+        user3.setCreateTime(now);
+        user3.setUpdateTime(now);
 
         UserProfile profile3 = new UserProfile();
         profile3.setRealName("王五");

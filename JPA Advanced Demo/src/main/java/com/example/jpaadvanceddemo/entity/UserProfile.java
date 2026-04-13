@@ -28,7 +28,7 @@ public class UserProfile {
 
     @Min(value = 0, message = "性别值不正确")
     @Max(value = 2, message = "性别值不正确")
-    @Column(columnDefinition = "TINYINT DEFAULT 2")
+    @Column(columnDefinition = "INTEGER DEFAULT 2")
     private Integer gender = 2;  // 0-女，1-男，2-未知
 
     private String address;
