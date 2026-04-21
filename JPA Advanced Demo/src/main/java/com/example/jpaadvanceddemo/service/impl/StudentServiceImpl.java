@@ -1,5 +1,6 @@
 package com.example.jpaadvanceddemo.service.impl;
 
+import com.example.jpaadvanceddemo.dto.StudentWithCoursesDTO;
 import com.example.jpaadvanceddemo.entity.Course;
 import com.example.jpaadvanceddemo.entity.Student;
 import com.example.jpaadvanceddemo.repository.CourseRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +33,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudentByIdWithCourses(Long id) {
-        return studentRepository.findByIdWithCourses(id)
+    @Transactional
+    public StudentWithCoursesDTO getStudentByIdWithCourses(Long id) {
+        Student student = studentRepository.findByIdWithCourses(id)
                 .orElseThrow(() -> new RuntimeException("学生不存在"));
+        return convertToDTO(student);
     }
 
     @Override
@@ -42,8 +46,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getAllStudentsWithCourses() {
-        return studentRepository.findAllWithCourses();
+    @Transactional
+    public List<StudentWithCoursesDTO> getAllStudentsWithCourses() {
+        List<Student> students = studentRepository.findAllWithCourses();
+        return students.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -69,5 +77,14 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
+    }
+
+    private StudentWithCoursesDTO convertToDTO(Student student) {
+        return new StudentWithCoursesDTO(
+                student.getId(),
+                student.getStudentName(),
+                student.getStudentNo(),
+                student.getCourses()
+        );
     }
 }

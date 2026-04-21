@@ -1,5 +1,6 @@
 package com.example.jpaadvanceddemo.service.impl;
 
+import com.example.jpaadvanceddemo.dto.CourseWithStudentsDTO;
 import com.example.jpaadvanceddemo.entity.Course;
 import com.example.jpaadvanceddemo.repository.CourseRepository;
 import com.example.jpaadvanceddemo.service.CourseService;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +30,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourseByIdWithStudents(Long id) {
-        return courseRepository.findByIdWithStudents(id)
+    @Transactional
+    public CourseWithStudentsDTO getCourseByIdWithStudents(Long id) {
+        Course course = courseRepository.findByIdWithStudents(id)
                 .orElseThrow(() -> new RuntimeException("课程不存在"));
+        return convertToDTO(course);
     }
 
     @Override
@@ -39,8 +43,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAllCoursesWithStudents() {
-        return courseRepository.findAllWithStudents();
+    @Transactional
+    public List<CourseWithStudentsDTO> getAllCoursesWithStudents() {
+        List<Course> courses = courseRepository.findAllWithStudents();
+        return courses.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -53,5 +61,14 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
+    }
+
+    private CourseWithStudentsDTO convertToDTO(Course course) {
+        return new CourseWithStudentsDTO(
+                course.getId(),
+                course.getCourseName(),
+                course.getCredit(),
+                course.getStudents()
+        );
     }
 }
