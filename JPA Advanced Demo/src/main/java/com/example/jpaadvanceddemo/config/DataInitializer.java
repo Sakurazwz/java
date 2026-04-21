@@ -203,4 +203,6 @@ public class DataInitializer implements CommandLineRunner {
         StudentRepository.save(student1);
         StudentRepository.save(student2);
     }
+
+
 }
