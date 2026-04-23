@@ -12,7 +12,7 @@ spring:
   # JPA 配置
   jpa:
     hibernate:
-      ddl-auto: create-drop  # 每次启动时重新创建表（开发环境）
+      ddl-auto: update
     show-sql: true  # 显示 SQL 语句
     properties:
       hibernate:
