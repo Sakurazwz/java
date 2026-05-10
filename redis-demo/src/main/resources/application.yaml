@@ -17,13 +17,9 @@ spring:
           min-idle: 0
           max-wait: -1ms
 
-  # 缓存配置
+  # 缓存配置（由 RedisConfig 中的 CacheManager Bean 管理）
   cache:
     type: redis
-    redis:
-      time-to-live: 600000  # 缓存过期时间：10分钟
-      cache-null-values: false
-      use-key-prefix: true
 
 # 服务器端口
 server:

@@ -19,6 +19,7 @@
 **项目名称**：redis-demo
 **项目路径**：`D:\fwpractice\class7\`
 **技术栈**：
+
 - Spring Boot 3.5.10
 - Java 21
 - Spring Data Redis
@@ -26,6 +27,7 @@
 - SpringDoc OpenAPI 2.8.0
 
 **Redis 环境**：
+
 - 版本：Redis 7.4.7 for Windows (MSYS2 with Service)
 - 安装路径：`D:\Program Files\Redis\`
 - 服务类型：Windows Service
@@ -119,14 +121,14 @@ D:\fwpractice\class7\
    ```bash
    # 解压到指定目录
    解压到: D:\Program Files\Redis\
-
+   
    # 安装为 Windows 服务 (推荐)
    cd D:\Program Files\Redis
    install_redis_service.bat
-
+   
    # 或者使用命令行安装
    redis-server.exe --service-install redis.windows.conf
-
+   
    # 启动服务
    redis-server.exe --service-start
    ```
@@ -136,7 +138,7 @@ D:\fwpractice\class7\
    # 测试连接
    redis-cli ping
    # 应该返回: PONG
-
+   
    # 测试基本操作
    redis-cli
    > set test "Hello Redis"
@@ -145,18 +147,20 @@ D:\fwpractice\class7\
    ```
 
 4. **服务管理**
+   
    ```bash
    # 启动服务
    redis-server.exe --service-start
-
+   
    # 停止服务
    redis-server.exe --service-stop
-
+   
    # 卸载服务
    redis-server.exe --service-uninstall
    ```
 
 **实战安装记录**：
+
 ```
 安装版本:   Redis 7.4.7 for Windows (MSYS2 with Service)
 安装路径:   D:\Program Files\Redis\
