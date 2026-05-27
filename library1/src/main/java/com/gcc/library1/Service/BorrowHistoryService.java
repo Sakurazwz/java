@@ -19,7 +19,7 @@ public class BorrowHistoryService {
         borrowHistory.setBookId(bookId);
         borrowHistory.setUserId(userId);
         borrowHistory.setDate(LocalDate.now());
-        borrowHistory.setBehavior(behavior);
+        borrowHistory.setBehaviour(behavior);
         return borrowHistoryRepository.save(borrowHistory);
     }
 
@@ -27,21 +27,13 @@ public class BorrowHistoryService {
         if (userId == null) {
             throw new IllegalArgumentException("用户ID不能为空");
         }
-        List<BorrowHistory> result = borrowHistoryRepository.findByUserId(userId);
-        if (result.isEmpty()) {
-            throw new EntityNotFoundException("未找到用户ID为 " + userId + " 的借阅历史记录");
-        }
-        return result;
+        return borrowHistoryRepository.findByUserId(userId);
     }
 
     public List<BorrowHistory> getBorrowHistoryByBookId(Long bookId) {
         if (bookId == null) {
             throw new IllegalArgumentException("书籍ID不能为空");
         }
-        List<BorrowHistory> result = borrowHistoryRepository.findByBookId(bookId);
-        if (result.isEmpty()) {
-            throw new EntityNotFoundException("未找到书籍ID为 " + bookId + " 的借阅历史记录");
-        }
-        return result;
+        return borrowHistoryRepository.findByBookId(bookId);
     }
 }

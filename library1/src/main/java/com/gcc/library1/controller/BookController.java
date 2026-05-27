@@ -112,10 +112,9 @@ public class BookController {
             return new ResponseEntity<>("bookId不能为空", HttpStatus.BAD_REQUEST);
         }
 
-        try {
-            borrowService.getBorrowBookByBookId(id);
+        if (borrowService.isBookBorrowedByAnyone(id)) {
             return new ResponseEntity<>(id + "该书已经借出", HttpStatus.NOT_ACCEPTABLE);
-        } catch (EntityNotFoundException e) {
+        } else {
             try {
                 bookService.deleteBook(id);
                 return new ResponseEntity<>("bookid为" + id + "已删除", HttpStatus.OK);

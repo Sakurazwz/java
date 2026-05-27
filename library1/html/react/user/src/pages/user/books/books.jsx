@@ -12,28 +12,19 @@ const Books = () => {
     const [error, setError] = useState("")
     const [showModal, setShowModal] = useState(false)
     const [editingBook, setEditingBook] = useState(null)
-    const [formData, setFormData] = useState({ title: "", author: "", description: "", cover: "", isbn: "" })
+    const [formData, setFormData] = useState({ title: "", author: "", description: "", cover: "", isbn: "", count: 1 })
     const [isAdmin, setIsAdmin] = useState(false)
     const [viewMode, setViewMode] = useState("card")
     const [currentUser, setCurrentUser] = useState(null)
     const [borrowingBookId, setBorrowingBookId] = useState(null)
     const [borrowRecords, setBorrowRecords] = useState([]) // 当前用户的借阅记录
-    const [copyCounts, setCopyCounts] = useState({}) // ISBN -> 副本数
 
     useEffect(() => {
         loadBooks()
         setIsAdmin(authApi.isAdmin())
-        // 从 localStorage 获取当前用户 ID
-        const token = authApi.getToken()
-        if (token) {
-            try {
-                const base64Url = token.split(".")[1]
-                const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
-                const payload = JSON.parse(window.atob(base64))
-                setCurrentUser({ id: payload.userId, name: payload.sub })
-            } catch (e) {
-                console.error("解析 token 失败:", e)
-            }
+        const user = authApi.getCurrentUser()
+        if (user) {
+            setCurrentUser({ id: user.id, name: user.name })
         }
     }, [])
 
@@ -48,14 +39,6 @@ const Books = () => {
         try {
             const data = await bookApi.getAllBooks()
             setBooks(data)
-            // 计算每种ISBN的副本数
-            const counts = {}
-            data.forEach((book) => {
-                if (book.isbn) {
-                    counts[book.isbn] = (counts[book.isbn] || 0) + 1
-                }
-            })
-            setCopyCounts(counts)
         } catch (err) {
             setError("加载图书列表失败: " + err.message)
         }
@@ -93,7 +76,7 @@ const Books = () => {
 
     const handleAddClick = () => {
         setEditingBook(null)
-        setFormData({ title: "", author: "", description: "", cover: "", isbn: "" })
+        setFormData({ title: "", author: "", description: "", cover: "", isbn: "", count: 1 })
         setShowModal(true)
     }
 
@@ -105,6 +88,7 @@ const Books = () => {
             description: book.description || "",
             cover: book.cover || "",
             isbn: book.isbn || "",
+            count: book.count ?? 1,
         })
         setShowModal(true)
     }
@@ -158,7 +142,7 @@ const Books = () => {
     const handleReturn = async (bookId) => {
         if (!window.confirm("确定要归还这本书吗？")) return
         try {
-            await borrowApi.returnBook(bookId)
+            await borrowApi.returnBook(bookId, currentUser.id)
             setError("")
             alert("还书成功！")
             loadUserBorrows()
@@ -289,11 +273,13 @@ const Books = () => {
                                     {book.isbn && (
                                         <div className="mb-1">
                                             <small className="text-muted">ISBN: {book.isbn}</small>
-                                            {copyCounts[book.isbn] > 1 && (
-                                                <Badge bg="info" className="ms-2">共{copyCounts[book.isbn]}册</Badge>
-                                            )}
                                         </div>
                                     )}
+                                    <div className="mb-1">
+                                        <small className="text-muted">
+                                            库存: {book.count ?? 0} 册 | 已借: {book.borrowCount ?? 0} 册
+                                        </small>
+                                    </div>
                                     <Card.Text className="book-description flex-grow-1">
                                         {book.description?.substring(0, 80) || "暂无简介"}
                                         {book.description?.length > 80 ? "..." : ""}
@@ -321,10 +307,10 @@ const Books = () => {
                                             <Button
                                                 variant="success"
                                                 size="sm"
-                                                disabled={borrowingBookId === book.id}
+                                                disabled={borrowingBookId === book.id || (book.count ?? 0) <= 0}
                                                 onClick={() => handleBorrow(book.id)}
                                             >
-                                                {borrowingBookId === book.id ? "借书中..." : "借书"}
+                                                {borrowingBookId === book.id ? "借书中..." : (book.count ?? 0) <= 0 ? "已借完" : "借书"}
                                             </Button>
                                         )}
                                         {isAdmin && (
@@ -362,6 +348,8 @@ const Books = () => {
                             <th>标题</th>
                             <th>作者</th>
                             <th>ISBN</th>
+                            <th>库存</th>
+                            <th>已借</th>
                             <th>简介</th>
                             <th style={{ width: "150px" }}>操作</th>
                         </tr>
@@ -379,12 +367,9 @@ const Books = () => {
                                 </td>
                                 <td>{book.title}</td>
                                 <td>{book.author}</td>
-                                <td>
-                                    {book.isbn || "-"}
-                                    {book.isbn && copyCounts[book.isbn] > 1 && (
-                                        <Badge bg="info" className="ms-1" pill>{copyCounts[book.isbn]}册</Badge>
-                                    )}
-                                </td>
+                                <td>{book.isbn || "-"}</td>
+                                <td>{book.count ?? 0}</td>
+                                <td>{book.borrowCount ?? 0}</td>
                                 <td>{book.description?.substring(0, 50) || "暂无简介"}...</td>
                                 <td>
                                     <div className="d-flex gap-1">
@@ -409,10 +394,10 @@ const Books = () => {
                                             <Button
                                                 variant="success"
                                                 size="sm"
-                                                disabled={borrowingBookId === book.id}
+                                                disabled={borrowingBookId === book.id || (book.count ?? 0) <= 0}
                                                 onClick={() => handleBorrow(book.id)}
                                             >
-                                                {borrowingBookId === book.id ? "借书中..." : "借书"}
+                                                {borrowingBookId === book.id ? "借书中..." : (book.count ?? 0) <= 0 ? "已借完" : "借书"}
                                             </Button>
                                         )}
                                         {isAdmin && (
@@ -487,6 +472,17 @@ const Books = () => {
                                 <Form.Text className="text-muted">
                                     多本相同ISBN的书将被视为同一本书的不同副本
                                 </Form.Text>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>库存数量</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    name="count"
+                                    value={formData.count}
+                                    onChange={handleFormChange}
+                                    min={1}
+                                    required
+                                />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>封面图片</Form.Label>

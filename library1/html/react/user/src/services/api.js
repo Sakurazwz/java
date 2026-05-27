@@ -33,6 +33,15 @@ const parseJwt = (token) => {
     }
 }
 
+// 从 JWT 获取当前用户信息（避免各组件重复解析）
+const getCurrentUser = () => {
+    const token = getToken()
+    if (!token) return null
+    const payload = parseJwt(token)
+    if (!payload) return null
+    return { id: payload.userId, name: payload.sub, role: payload.role }
+}
+
 // 获取用户角色
 const getRole = () => localStorage.getItem("userRole")
 
@@ -98,6 +107,8 @@ export const authApi = {
 
     // 判断是否为管理员
     isAdmin,
+
+    getCurrentUser,
 
     getToken,
     setToken,
@@ -197,10 +208,10 @@ export const borrowApi = {
         return response.text()
     },
 
-    returnBook: async (bookId) => {
+    returnBook: async (bookId, userId) => {
         const response = await fetchWithAuth(`${API_BASE_URL}/borrow/back`, {
             method: "DELETE",
-            body: JSON.stringify({ bookId }),
+            body: JSON.stringify({ bookId, userId }),
         })
         if (!response.ok) throw new Error("还书失败")
         return response.text()

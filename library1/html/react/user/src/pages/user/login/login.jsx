@@ -1,15 +1,15 @@
 import { useState } from "react"
-import "./adduser.css"
 import { Form, Button, Container, Alert } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
+import { authApi } from "../../../services/api"
+import "./login.css"
 
-const AddUser = () => {
+const Login = () => {
     const [formData, setFormData] = useState({
         name: "",
         password: "",
     })
     const [error, setError] = useState("")
-    const [success, setSuccess] = useState("")
     const navigate = useNavigate()
 
     const handleInputChange = (e) => {
@@ -20,36 +20,29 @@ const AddUser = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError("")
-        setSuccess("")
+
+        if (!formData.name.trim() || !formData.password.trim()) {
+            setError("用户名和密码不能为空")
+            return
+        }
 
         try {
-            const response = await fetch("http://localhost:8080/api/users/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            })
-
-            if (response.ok) {
-                setSuccess("注册成功！即将跳转到登录页...")
-                setTimeout(() => {
-                    navigate("/login")
-                }, 1500)
+            const data = await authApi.login(formData.name, formData.password)
+            if (data.token) {
+                // 登录成功，跳转到首页
+                navigate("/")
             } else {
-                const message = await response.text()
-                setError(message || "注册失败")
+                setError("登录失败：未获取到令牌")
             }
         } catch (error) {
-            setError("网络错误：" + error.message)
+            setError(error.message || "登录失败")
         }
     }
 
     return (
         <Container className="mt-5" style={{ maxWidth: "400px" }}>
-            <h2 className="text-center mb-4">用户注册</h2>
+            <h2 className="text-center mb-4">用户登录</h2>
             {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">{success}</Alert>}
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formName" className="mb-3">
                     <Form.Label>用户名</Form.Label>
@@ -75,15 +68,15 @@ const AddUser = () => {
                 </Form.Group>
                 <div className="d-grid">
                     <Button variant="primary" type="submit">
-                        注册
+                        登录
                     </Button>
                 </div>
             </Form>
             <div className="text-center mt-3">
-                已有账号？<Link to="/login">立即登录</Link>
+                还没有账号？<Link to="/register">立即注册</Link>
             </div>
         </Container>
     )
 }
 
-export default AddUser
+export default Login

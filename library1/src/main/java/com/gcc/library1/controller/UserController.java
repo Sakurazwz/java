@@ -7,6 +7,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +29,9 @@ public class UserController {
             if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
                 return new ResponseEntity<>("密码不能为空", HttpStatus.BAD_REQUEST);
             }
+            if (user.getPassword().length() < 6) {
+                return new ResponseEntity<>("密码长度不能少于6位", HttpStatus.BAD_REQUEST);
+            }
 
             try {
                 userService.getUserByName(user.getName());
@@ -44,6 +48,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestBody User user) {
         if (user == null || user.getId() == null) {

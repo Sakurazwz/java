@@ -12,28 +12,24 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class BorrowHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long userId;
 
+    @Column(nullable = false)
     private Long bookId;
 
+    @Column(nullable = false)
     private LocalDate date;
 
     // 注意：数据库实际列名为 "behavour"（拼写错误）
     // 如果未来重建数据库，应改为正确的 "behavior"
-    @Column(name = "behavour", nullable = false)
+    @Column(nullable = false)
     private String behaviour;
 
-    // 兼容原有调用方的 getter/setter
-    public String getBehavior() {
-        return behaviour;
-    }
-
-    public void setBehavior(String behavior) {
-        this.behaviour = behavior;
-    }
 }

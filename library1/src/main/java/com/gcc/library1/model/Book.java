@@ -26,4 +26,13 @@ public class Book {
     // 图书封面图片（Base64 编码存储）
     @Column(columnDefinition = "TEXT")
     private String cover;
+
+    // 库存数量
+    @Column(nullable = false)
+    private Integer count = 0;
+
+    // 被借数量
+    @Column(nullable = false)
+    private Integer borrowCount = 0;
+
 }

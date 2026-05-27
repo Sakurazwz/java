@@ -12,10 +12,12 @@ import java.util.Optional;
 public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Long> {
     Optional<BorrowRecord> findByBookId(Long bookId);
 
-    List<BorrowRecord> findByUserIdAndReturnDateIsNull(Long userId);
+    Optional<BorrowRecord> findByBookIdAndUserId(Long bookId, Long userId);
 
     List<BorrowRecord> findByUserId(Long userId);
 
-    // 查询已归还且归还日期早于指定日期的记录
-    List<BorrowRecord> findByUserIdAndReturnDateBeforeAndReturnDateIsNotNull(Long userId, LocalDate date);
+    // 查询逾期未还的借阅记录：应还日期已过（记录仍存在即未归还）
+    List<BorrowRecord> findByUserIdAndReturnDateBefore(Long userId, LocalDate date);
+
+    boolean existsByUserId(Long userId);
 }

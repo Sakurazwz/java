@@ -53,6 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     null,
                                     List.of(new SimpleGrantedAuthority("ROLE_" + role))
                             );
+                    // 将 userId 存入 details，方便后续权限校验
+                    authentication.setDetails(userId);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

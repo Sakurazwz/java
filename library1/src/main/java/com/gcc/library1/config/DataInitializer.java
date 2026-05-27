@@ -30,7 +30,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // 检查是否已存在管理员账户（role=ADMIN）
-        boolean hasAdmin = userRepository.findAll().stream().anyMatch(user -> "ADMIN".equals(user.getRole()));
+        boolean hasAdmin = userRepository.existsByRole("ADMIN");
 
         if (!hasAdmin) {
             // 检查指定用户名是否已存在

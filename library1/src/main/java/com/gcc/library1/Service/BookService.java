@@ -26,6 +26,36 @@ public class BookService {
         book.setAuthor(inputBook.getAuthor());
         book.setDescription(inputBook.getDescription());
         book.setCover(inputBook.getCover());
+        book.setCount(inputBook.getCount());
+        return bookRepository.save(book);
+    }
+
+    /**
+     * 借书：count -1，borrowCount +1
+     */
+    public Book borrowBook(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + bookId));
+        if (book.getCount() == null || book.getCount() <= 0) {
+            throw new IllegalStateException("该书籍库存不足，无法借阅");
+        }
+        book.setCount(book.getCount() - 1);
+        book.setBorrowCount((book.getBorrowCount() == null ? 0 : book.getBorrowCount()) + 1);
+        return bookRepository.save(book);
+    }
+
+    /**
+     * 还书：count +1，borrowCount -1
+     */
+    public Book returnBook(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + bookId));
+        int currentBorrowCount = book.getBorrowCount() == null ? 0 : book.getBorrowCount();
+        if (currentBorrowCount <= 0) {
+            throw new IllegalStateException("该书没有被借出的记录，无法归还");
+        }
+        book.setCount((book.getCount() == null ? 0 : book.getCount()) + 1);
+        book.setBorrowCount(currentBorrowCount - 1);
         return bookRepository.save(book);
     }
 
@@ -43,14 +73,6 @@ public class BookService {
     public Book getBookById(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + id));
-    }
-
-    public List<Book> getBooksByTitle(String title) {
-        List<Book> books = bookRepository.findByTitle(title);
-        if (books.isEmpty()) {
-            throw new EntityNotFoundException("未找到书名为: " + title + " 的书籍");
-        }
-        return books;
     }
 
     public List<Book> getBooksByTitleLike(String title) {

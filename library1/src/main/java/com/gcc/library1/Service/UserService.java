@@ -52,11 +52,15 @@ public class UserService {
     }
 
     /**
-     * 验证用户名和密码（使用 BCrypt 解密比较）
+     * 验证用户名和密码（使用 BCrypt 解密比较），防止时序攻击枚举用户
      */
     public User authenticate(String name, String password) {
-        User user = userRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("用户名或密码错误"));
+        User user = userRepository.findByName(name).orElse(null);
+        // 无论用户是否存在，都执行一次 BCrypt 匹配以防止时序攻击
+        if (user == null) {
+            passwordEncoder.matches(password, "$2a$10$dummy.dummy.dummy.dummy.dummy.dummy.dummy.dummy.dummy.dummy");
+            throw new EntityNotFoundException("用户名或密码错误");
+        }
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new EntityNotFoundException("用户名或密码错误");
         }
