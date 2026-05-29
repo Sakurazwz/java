@@ -1,10 +1,15 @@
 package com.gcc.library1.service;
 
+import com.gcc.library1.dto.BookCreateRequest;
+import com.gcc.library1.dto.BookResponse;
+import com.gcc.library1.dto.BookUpdateRequest;
+import com.gcc.library1.dto.mapper.EntityMapper;
 import com.gcc.library1.model.Book;
 import com.gcc.library1.repository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,49 +18,47 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final EntityMapper mapper;
 
-    public Book addBook(Book book) {
-        return bookRepository.save(book);
+    public BookResponse addBook(BookCreateRequest request) {
+        Book book = mapper.toEntity(request);
+        return mapper.toBookResponse(bookRepository.save(book));
     }
 
-    public Book updateBook(Long id, Book inputBook) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + id));
-        book.setIsbn(inputBook.getIsbn());
-        book.setTitle(inputBook.getTitle());
-        book.setAuthor(inputBook.getAuthor());
-        book.setDescription(inputBook.getDescription());
-        book.setCover(inputBook.getCover());
-        book.setCount(inputBook.getCount());
-        return bookRepository.save(book);
+    public BookResponse updateBook(BookUpdateRequest request) {
+        Book book = bookRepository.findById(request.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + request.getId()));
+        mapper.updateEntity(book, request);
+        return mapper.toBookResponse(bookRepository.save(book));
     }
 
     /**
      * 借书：count -1，borrowCount +1
      */
+    @Transactional
     public Book borrowBook(Long bookId) {
-        Book book = bookRepository.findById(bookId)
+        Book book = bookRepository.findByIdForUpdate(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + bookId));
-        if (book.getCount() == null || book.getCount() <= 0) {
+        if (book.getCount() <= 0) {
             throw new IllegalStateException("该书籍库存不足，无法借阅");
         }
         book.setCount(book.getCount() - 1);
-        book.setBorrowCount((book.getBorrowCount() == null ? 0 : book.getBorrowCount()) + 1);
+        book.setBorrowCount(book.getBorrowCount() + 1);
         return bookRepository.save(book);
     }
 
     /**
      * 还书：count +1，borrowCount -1
      */
+    @Transactional
     public Book returnBook(Long bookId) {
-        Book book = bookRepository.findById(bookId)
+        Book book = bookRepository.findByIdForUpdate(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + bookId));
-        int currentBorrowCount = book.getBorrowCount() == null ? 0 : book.getBorrowCount();
-        if (currentBorrowCount <= 0) {
+        if (book.getBorrowCount() <= 0) {
             throw new IllegalStateException("该书没有被借出的记录，无法归还");
         }
-        book.setCount((book.getCount() == null ? 0 : book.getCount()) + 1);
-        book.setBorrowCount(currentBorrowCount - 1);
+        book.setCount(book.getCount() + 1);
+        book.setBorrowCount(book.getBorrowCount() - 1);
         return bookRepository.save(book);
     }
 
@@ -66,29 +69,26 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<BookResponse> getAllBooks() {
+        return mapper.toBookResponseList(bookRepository.findAll());
     }
 
-    public Book getBookById(Long id) {
-        return bookRepository.findById(id)
+    public BookResponse getBookById(Long id) {
+        Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id:" + id));
+        return mapper.toBookResponse(book);
     }
 
-    public List<Book> getBooksByTitleLike(String title) {
-        List<Book> books = bookRepository.findByTitleLike(title);
-        if (books.isEmpty()) {
-            throw new EntityNotFoundException("未找到书名为: " + title + " 的书籍");
-        }
-        return books;
+    public List<BookResponse> getBooksByTitleLike(String title) {
+        return mapper.toBookResponseList(bookRepository.findByTitleLike(title));
     }
 
-    public List<Book> getBooksByIsbn(String isbn) {
+    public List<BookResponse> getBooksByIsbn(String isbn) {
         List<Book> books = bookRepository.findByIsbn(isbn);
         if (books.isEmpty()) {
             throw new EntityNotFoundException("未找到ISBN为: " + isbn + " 的书籍");
         }
-        return books;
+        return mapper.toBookResponseList(books);
     }
 
     public long getCopyCountByIsbn(String isbn) {

@@ -1,5 +1,7 @@
 package com.gcc.library1.service;
 
+import com.gcc.library1.dto.BorrowRecordResponse;
+import com.gcc.library1.dto.mapper.EntityMapper;
 import com.gcc.library1.model.BorrowRecord;
 import com.gcc.library1.repository.BorrowRecordRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,18 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class BorrowRecordService {
     private final BorrowRecordRepository borrowRecordRepository;
-    private final BookService bookService;
+    private final EntityMapper mapper;
 
     @Transactional
     public BorrowRecord addBorrow(Long bookId, Long userId, LocalDate borrowDate, LocalDate returnDate) {
-        // 借书时更新书籍的count和borrowCount（带悲观锁防并发）
-        bookService.borrowBook(bookId);
-
         BorrowRecord borrowRecord = new BorrowRecord();
         borrowRecord.setBookId(bookId);
         borrowRecord.setUserId(userId);
@@ -30,49 +30,56 @@ public class BorrowRecordService {
     }
 
     public BorrowRecord updateBorrow(Long bookId, Long userId, LocalDate returnDate) {
-        BorrowRecord borrowRecord = borrowRecordRepository.findByBookIdAndUserId(bookId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("BorrowRecord not found with bookId:" + bookId + " and userId:" + userId));
+        BorrowRecord borrowRecord = findRecordByBookIdAndUserId(bookId, userId);
         borrowRecord.setReturnDate(returnDate);
         return borrowRecordRepository.save(borrowRecord);
     }
 
-    public List<BorrowRecord> getBorrowBooksByUserId(Long userId) {
-        return borrowRecordRepository.findByUserId(userId);
+    public BorrowRecord getBorrowedRecord(Long bookId, Long userId) {
+        return findRecordByBookIdAndUserId(bookId, userId);
+    }
+
+    public List<BorrowRecordResponse> getBorrowBooksByUserId(Long userId) {
+        return mapper.toBorrowRecordResponseList(borrowRecordRepository.findByUserId(userId));
     }
 
     @Transactional
     public void deleteBorrow(Long bookId, Long userId) {
-        BorrowRecord borrowRecord = borrowRecordRepository.findByBookIdAndUserId(bookId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("BorrowRecord not found with bookId:" + bookId + " and userId:" + userId));
-
-        // 先还书（可能因校验失败），再删记录
-        bookService.returnBook(bookId);
-        borrowRecordRepository.deleteById(borrowRecord.getId());
+        BorrowRecord borrowRecord = findRecordByBookIdAndUserId(bookId, userId);
+        borrowRecordRepository.delete(borrowRecord);
     }
 
     public boolean hasBorrowedThisBook(Long bookId, Long userId) {
-        return borrowRecordRepository.findByBookIdAndUserId(bookId, userId).isPresent();
-    }
-
-    public BorrowRecord getBorrowedRecord(Long bookId, Long userId) {
-        return borrowRecordRepository.findByBookIdAndUserId(bookId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("BorrowRecord not found with bookId:" + bookId + " and userId:" + userId));
+        List<BorrowRecord> records = borrowRecordRepository.findByBookId(bookId);
+        return records.stream().anyMatch(r -> Objects.equals(r.getUserId(), userId));
     }
 
     public boolean isBookBorrowedByAnyone(Long bookId) {
-        return borrowRecordRepository.findByBookId(bookId).isPresent();
+        return !borrowRecordRepository.findByBookId(bookId).isEmpty();
     }
 
     public boolean hasBorrowedBooks(Long userId) {
-        return borrowRecordRepository.existsByUserId(userId);
+        return !borrowRecordRepository.findByUserId(userId).isEmpty();
     }
 
-    public List<BorrowRecord> getOverdueBorrowRecordsByUserId(Long userId) {
+    public List<BorrowRecordResponse> getOverdueBorrowRecordsByUserId(Long userId) {
         LocalDate today = LocalDate.now();
-        return borrowRecordRepository.findByUserIdAndReturnDateBefore(userId, today);
+        return mapper.toBorrowRecordResponseList(borrowRecordRepository.findByUserIdAndReturnDateBefore(userId, today));
     }
 
-    public List<BorrowRecord> getAllBorrowRecords() {
-        return borrowRecordRepository.findAll();
+    public List<BorrowRecordResponse> getAllBorrowRecords() {
+        return mapper.toBorrowRecordResponseList(borrowRecordRepository.findAll());
+    }
+
+    private BorrowRecord findRecordByBookIdAndUserId(Long bookId, Long userId) {
+        List<BorrowRecord> records = borrowRecordRepository.findByBookId(bookId);
+        if (records.isEmpty()) {
+            throw new EntityNotFoundException("BorrowRecord not found with bookId:" + bookId);
+        }
+        return records.stream()
+                .filter(r -> Objects.equals(r.getUserId(), userId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "BorrowRecord not found with bookId:" + bookId + " and userId:" + userId));
     }
 }

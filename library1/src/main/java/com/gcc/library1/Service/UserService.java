@@ -1,5 +1,8 @@
 package com.gcc.library1.service;
 
+import com.gcc.library1.dto.UserRegisterRequest;
+import com.gcc.library1.dto.UserResponse;
+import com.gcc.library1.dto.mapper.EntityMapper;
 import com.gcc.library1.model.User;
 import com.gcc.library1.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,11 +17,14 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EntityMapper mapper;
 
-    public User addUser(User user) {
-        // 注册时加密密码
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public UserResponse addUser(UserRegisterRequest request) {
+        User user = new User();
+        user.setName(request.getName());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole("USER");
+        return mapper.toUserResponse(userRepository.save(user));
     }
 
     public User updateUser(Long id, User user) {
@@ -37,30 +43,28 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        return mapper.toUserResponseList(userRepository.findAll());
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found " + id));
+        return mapper.toUserResponse(user);
     }
 
-    public User getUserByName(String name) {
-        return userRepository.findByName(name)
+    public UserResponse getUserByName(String name) {
+        User user = userRepository.findByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("User not found " + name));
+        return mapper.toUserResponse(user);
     }
 
     /**
-     * 验证用户名和密码（使用 BCrypt 解密比较），防止时序攻击枚举用户
+     * 验证用户名和密码（使用 BCrypt 解密比较）
      */
     public User authenticate(String name, String password) {
-        User user = userRepository.findByName(name).orElse(null);
-        // 无论用户是否存在，都执行一次 BCrypt 匹配以防止时序攻击
-        if (user == null) {
-            passwordEncoder.matches(password, "$2a$10$dummy.dummy.dummy.dummy.dummy.dummy.dummy.dummy.dummy.dummy");
-            throw new EntityNotFoundException("用户名或密码错误");
-        }
+        User user = userRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("用户名或密码错误"));
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new EntityNotFoundException("用户名或密码错误");
         }

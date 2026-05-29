@@ -1,14 +1,18 @@
 package com.gcc.library1.controller;
 
-import com.gcc.library1.model.User;
+import com.gcc.library1.dto.UserRegisterRequest;
+import com.gcc.library1.dto.UserResponse;
 import com.gcc.library1.service.BorrowRecordService;
 import com.gcc.library1.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,61 +22,29 @@ public class UserController {
     private final BorrowRecordService borrowService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid UserRegisterRequest request) {
         try {
-            if (user == null) {
-                return new ResponseEntity<>("用户信息不能为空", HttpStatus.BAD_REQUEST);
-            }
-            if (user.getName() == null || user.getName().trim().isEmpty()) {
-                return new ResponseEntity<>("用户名不能为空", HttpStatus.BAD_REQUEST);
-            }
-            if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
-                return new ResponseEntity<>("密码不能为空", HttpStatus.BAD_REQUEST);
-            }
-            if (user.getPassword().length() < 6) {
-                return new ResponseEntity<>("密码长度不能少于6位", HttpStatus.BAD_REQUEST);
-            }
-
-            try {
-                userService.getUserByName(user.getName());
-                return new ResponseEntity<>("用户已存在", HttpStatus.CONFLICT);
-            } catch (EntityNotFoundException e) {
-                // 用户不存在，可以继续注册（密码会在 Service 层加密）
-                User registeredUser = userService.addUser(user);
-                return new ResponseEntity<>(registeredUser, HttpStatus.OK);
-            }
+            userService.getUserByName(request.getName());
+            return new ResponseEntity<>("用户已存在", HttpStatus.CONFLICT);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("注册失败，请稍后重试", HttpStatus.INTERNAL_SERVER_ERROR);
+            UserResponse registeredUser = userService.addUser(request);
+            return new ResponseEntity<>(registeredUser, HttpStatus.OK);
         }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestBody User user) {
-        if (user == null || user.getId() == null) {
-            return new ResponseEntity<>("用户信息不完整", HttpStatus.BAD_REQUEST);
-        }
+    @GetMapping("/all")
+    public List<UserResponse> getAllUsers() {
+        return userService.getAllUsers();
+    }
 
-        Long id = user.getId();
-
-        try {
-            userService.getUserById(id);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("找不到用户", HttpStatus.NOT_FOUND);
-        }
-
-        boolean hasBorrowedBooks = borrowService.hasBorrowedBooks(id);
-        if (hasBorrowedBooks) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        if (borrowService.hasBorrowedBooks(id)) {
             return new ResponseEntity<>("该用户已借书，无法删除", HttpStatus.CONFLICT);
         }
-
-        try {
-            userService.deleteUser(id);
-            return new ResponseEntity<>("用户删除成功", HttpStatus.OK);
-        } catch (EntityNotFoundException userNotFound) {
-            return new ResponseEntity<>("找不到用户", HttpStatus.NOT_FOUND);
-        }
+        userService.deleteUser(id);
+        return new ResponseEntity<>("用户删除成功", HttpStatus.OK);
     }
 }

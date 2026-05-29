@@ -3,17 +3,21 @@ import { Navbar, Container, Button } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { authApi } from "../../../services/api"
 import "./Header.css"
+import {useEffect, useState} from "react";
 
 const UserHeader = () => {
     const navigate = useNavigate()
     const isAuthenticated = authApi.isAuthenticated()
-    // 直接从 localStorage 读取，登录/登出后自动反映最新角色
-    const isAdmin = authApi.isAdmin()
 
     const handleLogout = () => {
         authApi.logout()
         navigate("/login")
     }
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    useEffect(() => {
+        setIsAdmin(authApi.isAdmin())
+    }, [])
 
     return (
         <Navbar bg="primary" variant="dark" expand="lg">
@@ -28,7 +32,6 @@ const UserHeader = () => {
                             <>
                                 <Nav.Link as={Link} to="/books">图书管理</Nav.Link>
                                 <Nav.Link as={Link} to="/borrow">借阅管理</Nav.Link>
-                                <Nav.Link as={Link} to="/history">借阅历史</Nav.Link>
                             </>
                         )}
                     </Nav>

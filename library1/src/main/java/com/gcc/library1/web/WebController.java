@@ -10,13 +10,13 @@ public class WebController {
 
     @GetMapping("/")
     public String home(Model model, Principal principal) {
-        model.addAttribute("username", principal.getName());
+        model.addAttribute("username", principal != null ? principal.getName() : "游客");
         return "home";
     }
 
     @GetMapping("/profile")
     public String profile(Model model, Principal principal) {
-        model.addAttribute("username", principal.getName());
+        model.addAttribute("username", principal != null ? principal.getName() : "游客");
         return "profile";
     }
 

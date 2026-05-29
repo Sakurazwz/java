@@ -33,15 +33,6 @@ const parseJwt = (token) => {
     }
 }
 
-// 从 JWT 获取当前用户信息（避免各组件重复解析）
-const getCurrentUser = () => {
-    const token = getToken()
-    if (!token) return null
-    const payload = parseJwt(token)
-    if (!payload) return null
-    return { id: payload.userId, name: payload.sub, role: payload.role }
-}
-
 // 获取用户角色
 const getRole = () => localStorage.getItem("userRole")
 
@@ -108,8 +99,6 @@ export const authApi = {
     // 判断是否为管理员
     isAdmin,
 
-    getCurrentUser,
-
     getToken,
     setToken,
     removeToken,
@@ -127,12 +116,6 @@ export const userApi = {
             const error = await response.text()
             throw new Error(error)
         }
-        return response.json()
-    },
-
-    getAllUsers: async () => {
-        const response = await fetchWithAuth(`${API_BASE_URL}/users/all`)
-        if (!response.ok) throw new Error("获取用户列表失败")
         return response.json()
     },
 }
@@ -246,12 +229,6 @@ export const borrowApi = {
 
 // 借阅历史 API
 export const historyApi = {
-    getAllHistory: async () => {
-        const response = await fetchWithAuth(`${API_BASE_URL}/borrowhistory/all`)
-        if (!response.ok) throw new Error("获取全部历史记录失败")
-        return response.json()
-    },
-
     getHistoryByBookId: async (bookId) => {
         const response = await fetchWithAuth(`${API_BASE_URL}/borrowhistory/getBorrowHistoryByBookId/${bookId}`)
         if (!response.ok) throw new Error("获取历史记录失败")

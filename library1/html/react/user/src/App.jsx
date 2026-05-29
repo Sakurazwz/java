@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import UserHeader from './pages/user/header/Header'
 import Books from './pages/user/books/books'
 import Borrow from './pages/user/borrow/borrow'
+import History from './pages/user/history/history'
 import Login from './pages/user/login/login'
 import AddUser from './pages/user/adduser/adduser'
 import { authApi } from './services/api'
@@ -52,6 +53,11 @@ function App() {
                     <Route path="/borrow" element={
                         <ProtectedRoute>
                             <Borrow />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/history" element={
+                        <ProtectedRoute>
+                            <History />
                         </ProtectedRoute>
                     } />
                     <Route path="*" element={<Navigate to="/" replace />} />

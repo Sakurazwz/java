@@ -1,15 +1,19 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Table, Button, Form, Modal, Alert, Container } from "react-bootstrap"
-import { borrowApi, bookApi, authApi } from "../../../services/api"
+import { borrowApi, bookApi, userApi, authApi } from "../../../services/api"
 import "./borrow.css"
 
 const Borrow = () => {
     const [borrows, setBorrows] = useState([])
     const [bookMap, setBookMap] = useState({}) // bookId -> book对象
+    const [userMap, setUserMap] = useState({}) // userId -> 用户名
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
-    const [isAdmin, setIsAdmin] = useState(false)
-    const [currentUserId, setCurrentUserId] = useState(null)
+    const [isAdmin, setIsAdmin] = useState(authApi.isAdmin())
+    const [currentUserId, setCurrentUserId] = useState(() => {
+        const user = authApi.getCurrentUser()
+        return user ? user.id : null
+    })
 
     // 借书表单
     const [showBorrowModal, setShowBorrowModal] = useState(false)
@@ -25,24 +29,7 @@ const Borrow = () => {
         userId: "",
     })
 
-    useEffect(() => {
-        const admin = authApi.isAdmin()
-        setIsAdmin(admin)
-        const user = authApi.getCurrentUser()
-        if (user) {
-            setCurrentUserId(user.id)
-        }
-        loadBookMap()
-    }, [])
-
-    // currentUserId 就绪后再加载借阅记录
-    useEffect(() => {
-        if (currentUserId != null) {
-            loadBorrows()
-        }
-    }, [currentUserId, isAdmin])
-
-    const loadBookMap = async () => {
+    const loadBookMap = useCallback(async () => {
         try {
             const books = await bookApi.getAllBooks()
             const map = {}
@@ -51,9 +38,20 @@ const Borrow = () => {
         } catch (err) {
             console.error("加载图书信息失败:", err)
         }
-    }
+    }, [])
 
-    const loadBorrows = async () => {
+    const loadUserMap = useCallback(async () => {
+        try {
+            const users = await userApi.getAllUsers()
+            const map = {}
+            users.forEach((u) => { map[u.id] = u.name })
+            setUserMap(map)
+        } catch (err) {
+            console.error("加载用户信息失败:", err)
+        }
+    }, [])
+
+    const loadBorrows = useCallback(async () => {
         try {
             // 普通用户只查自己的，管理员查全部
             if (isAdmin) {
@@ -66,7 +64,21 @@ const Borrow = () => {
         } catch (err) {
             setError("加载借阅记录失败: " + err.message)
         }
-    }
+    }, [isAdmin, currentUserId])
+
+    useEffect(() => {
+        loadBookMap()
+        if (isAdmin) {
+            loadUserMap()
+        }
+    }, [loadBookMap, loadUserMap, isAdmin])
+
+    // currentUserId 就绪后再加载借阅记录
+    useEffect(() => {
+        if (currentUserId != null) {
+            loadBorrows()
+        }
+    }, [currentUserId, isAdmin, loadBorrows])
 
     const handleBorrow = async (e) => {
         e.preventDefault()
@@ -143,7 +155,7 @@ const Borrow = () => {
                         <th>图书ID</th>
                         <th>书名</th>
                         <th>ISBN</th>
-                        <th>用户ID</th>
+                        <th>用户</th>
                         <th>借出日期</th>
                         <th>应还日期</th>
                         <th>操作</th>
@@ -158,7 +170,7 @@ const Borrow = () => {
                             <td>{borrow.bookId}</td>
                             <td>{book?.title || "-"}</td>
                             <td>{book?.isbn || "-"}</td>
-                            <td>{borrow.userId}</td>
+                            <td>{userMap[borrow.userId] || borrow.userId}</td>
                             <td>{borrow.borrowDate}</td>
                             <td>{borrow.returnDate}</td>
                             <td>

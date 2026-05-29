@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "borrowHistory")
@@ -25,10 +25,8 @@ public class BorrowHistory {
     private Long bookId;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
-    // 注意：数据库实际列名为 "behavour"（拼写错误）
-    // 如果未来重建数据库，应改为正确的 "behavior"
     @Column(nullable = false)
     private String behaviour;
 

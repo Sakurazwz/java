@@ -1,6 +1,5 @@
 package com.gcc.library1.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,13 +16,10 @@ public class User {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String password;
 
     // 用户角色：ADMIN 或 USER
     @Column(nullable = false)
     private String role = "USER";
-
-    private String borrowBook;
 }

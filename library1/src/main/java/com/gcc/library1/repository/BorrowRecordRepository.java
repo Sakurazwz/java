@@ -6,18 +6,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Long> {
-    Optional<BorrowRecord> findByBookId(Long bookId);
+    List<BorrowRecord> findByBookId(Long bookId);
 
-    Optional<BorrowRecord> findByBookIdAndUserId(Long bookId, Long userId);
+    List<BorrowRecord> findByUserIdAndReturnDateIsNull(Long userId);
 
     List<BorrowRecord> findByUserId(Long userId);
 
-    // 查询逾期未还的借阅记录：应还日期已过（记录仍存在即未归还）
+    // 查询逾期未还的记录：returnDate 在今天之前
     List<BorrowRecord> findByUserIdAndReturnDateBefore(Long userId, LocalDate date);
-
-    boolean existsByUserId(Long userId);
 }

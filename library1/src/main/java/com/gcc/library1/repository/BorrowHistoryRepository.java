@@ -8,7 +8,9 @@ import java.util.List;
 
 @Repository
 public interface BorrowHistoryRepository extends JpaRepository<BorrowHistory, Long> {
-    List<BorrowHistory> findByUserId(Long userId);
+    List<BorrowHistory> findByUserIdOrderByDateDesc(Long userId);
 
-    List<BorrowHistory> findByBookId(Long bookId);
+    List<BorrowHistory> findByBookIdOrderByDateDesc(Long bookId);
+
+    List<BorrowHistory> findAllByOrderByDateDesc();
 }
