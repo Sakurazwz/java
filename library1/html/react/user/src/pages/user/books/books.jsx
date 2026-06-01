@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { Table, Button, Form, Alert, Container, Badge, Modal, Card, Row, Col } from "react-bootstrap"
+import { useSearchParams } from "react-router-dom"
 import { bookApi, authApi, borrowApi } from "../../../services/api"
 import "./books.css"
 
@@ -7,6 +8,7 @@ const DEFAULT_COVER = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy5
 
 const Books = () => {
     const [books, setBooks] = useState([])
+    const [searchParams, setSearchParams] = useSearchParams()
     const [searchTerm, setSearchTerm] = useState("")
     const [error, setError] = useState("")
     const [showModal, setShowModal] = useState(false)
@@ -42,6 +44,21 @@ const Books = () => {
     useEffect(() => {
         loadBooks()
     }, [loadBooks])
+
+    // URL 参数 ?search=xxx 来自 AI 推荐的书名点击
+    useEffect(() => {
+        const bookTitle = searchParams.get("search")
+        if (bookTitle) {
+            setSearchTerm(bookTitle)
+            setSearchParams({}, { replace: true }) // 清除 URL 参数
+            bookApi.searchBooks(bookTitle).then((data) => {
+                setBooks(data)
+                setError("")
+            }).catch((err) => {
+                setError("搜索失败: " + err.message)
+            })
+        }
+    }, [searchParams, setSearchParams])
 
     useEffect(() => {
         if (currentUser) {

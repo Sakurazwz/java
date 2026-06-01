@@ -8,6 +8,7 @@ import History from './pages/user/history/history'
 import Login from './pages/user/login/login'
 import AddUser from './pages/user/adduser/adduser'
 import Users from './pages/user/users/users'
+import AiRecommend from './components/AiRecommend'
 import { authApi } from './services/api'
 import './App.css'
 
@@ -29,6 +30,7 @@ function App() {
     return (
         <div className="user-app">
             <UserHeader />
+            <AiRecommend />
             <Container fluid className="p-0">
                 <Routes>
                     <Route path="/login" element={

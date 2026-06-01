@@ -17,4 +17,7 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Long
 
     // 查询逾期未还的记录：returnDate 在今天之前
     List<BorrowRecord> findByUserIdAndReturnDateBefore(Long userId, LocalDate date);
+
+    // 按 userId 过滤借阅记录
+    List<BorrowRecord> findByUserIdOrderByIdDesc(Long userId);
 }

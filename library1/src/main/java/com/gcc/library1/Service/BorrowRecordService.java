@@ -71,6 +71,16 @@ public class BorrowRecordService {
         return mapper.toBorrowRecordResponseList(borrowRecordRepository.findAll());
     }
 
+    public List<BorrowRecordResponse> searchBorrowRecords(Long userId) {
+        List<BorrowRecord> result;
+        if (userId != null) {
+            result = borrowRecordRepository.findByUserIdOrderByIdDesc(userId);
+        } else {
+            result = borrowRecordRepository.findAll();
+        }
+        return mapper.toBorrowRecordResponseList(result);
+    }
+
     private BorrowRecord findRecordByBookIdAndUserId(Long bookId, Long userId) {
         List<BorrowRecord> records = borrowRecordRepository.findByBookId(bookId);
         if (records.isEmpty()) {

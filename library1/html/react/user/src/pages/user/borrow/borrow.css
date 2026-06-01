@@ -12,3 +12,52 @@
     border-radius: 8px;
     vertical-align: middle;
 }
+
+/* 借阅卡片头部 */
+.borrow-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.borrow-id {
+    font-weight: 700;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.borrow-user {
+    font-size: 0.82rem;
+    opacity: 0.85;
+}
+
+.borrow-overdue-card .borrow-card-header {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+/* 借阅信息区域 */
+.borrow-info {
+    margin: 0.5rem 0;
+}
+
+.borrow-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.88rem;
+}
+
+.borrow-info-item:last-child {
+    border-bottom: none;
+}
+
+.borrow-label {
+    color: #6c757d;
+    font-size: 0.82rem;
+    font-weight: 500;
+}

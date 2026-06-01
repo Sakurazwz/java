@@ -118,8 +118,9 @@ public class BorrowRecordController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
-    public List<BorrowRecordResponse> getAllBorrowRecords() {
-        return borrowService.getAllBorrowRecords();
+    public List<BorrowRecordResponse> getAllBorrowRecords(
+            @RequestParam(required = false) Long userId) {
+        return borrowService.searchBorrowRecords(userId);
     }
 
     /**

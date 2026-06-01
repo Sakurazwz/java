@@ -69,7 +69,7 @@ const UserHeader = () => {
                             </>
                         ) : (
                             <>
-                                <Badge className="role-badge" bg={isAdmin ? "warning" : "light"}>
+                                <Badge className="role-badge" bg={isAdmin ? "warning" : "primary"}>
                                     {isAdmin ? "管理员" : "普通用户"}
                                 </Badge>
                                 <Button className="btn-logout" variant="outline-light" size="sm" onClick={handleLogout}>

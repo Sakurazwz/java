@@ -42,4 +42,18 @@ public class BorrowHistoryService {
         }
         return mapper.toBorrowHistoryDTOList(borrowHistoryRepository.findByBookIdOrderByDateDesc(bookId));
     }
+
+    public List<BorrowHistoryDTO> searchBorrowHistory(Long userId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<BorrowHistory> result;
+        if (userId != null && startDate != null && endDate != null) {
+            result = borrowHistoryRepository.findByUserIdAndDateBetweenOrderByDateDesc(userId, startDate, endDate);
+        } else if (startDate != null && endDate != null) {
+            result = borrowHistoryRepository.findByDateBetweenOrderByDateDesc(startDate, endDate);
+        } else if (userId != null) {
+            result = borrowHistoryRepository.findByUserIdOrderByDateDesc(userId);
+        } else {
+            result = borrowHistoryRepository.findAllByOrderByDateDesc();
+        }
+        return mapper.toBorrowHistoryDTOList(result);
+    }
 }

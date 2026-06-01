@@ -220,12 +220,22 @@ export const bookApi = {
         if (!response.ok) throw new Error("删除图书失败")
         return response.text()
     },
+
+    recommend: async (query) => {
+        const response = await fetchWithAuth(`${API_BASE_URL}/books/recommend?query=${encodeURIComponent(query)}`)
+        if (!response.ok) throw new Error("推荐请求失败")
+        return response.json()
+    },
 }
 
 // 借阅管理 API
 export const borrowApi = {
-    getAllBorrows: async () => {
-        const response = await fetchWithAuth(`${API_BASE_URL}/borrow/all`)
+    getAllBorrows: async ({ userId } = {}) => {
+        const params = new URLSearchParams()
+        if (userId) params.append("userId", userId)
+        const qs = params.toString()
+        const url = `${API_BASE_URL}/borrow/all${qs ? "?" + qs : ""}`
+        const response = await fetchWithAuth(url)
         if (!response.ok) throw new Error("获取借阅记录失败")
         return response.json()
     },
@@ -272,8 +282,14 @@ export const borrowApi = {
 
 // 借阅历史 API
 export const historyApi = {
-    getAllHistory: async () => {
-        const response = await fetchWithAuth(`${API_BASE_URL}/borrowhistory/all`)
+    getAllHistory: async ({ userId, startDate, endDate } = {}) => {
+        const params = new URLSearchParams()
+        if (userId) params.append("userId", userId)
+        if (startDate) params.append("startDate", startDate)
+        if (endDate) params.append("endDate", endDate)
+        const qs = params.toString()
+        const url = `${API_BASE_URL}/borrowhistory/all${qs ? "?" + qs : ""}`
+        const response = await fetchWithAuth(url)
         if (!response.ok) throw new Error("获取全部历史记录失败")
         return response.json()
     },
