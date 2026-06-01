@@ -1,13 +1,13 @@
 import { Nav, Badge } from "react-bootstrap"
 import { Navbar, Container, Button } from "react-bootstrap"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { authApi } from "../../../services/api"
 import "./Header.css"
 
 const UserHeader = () => {
     const navigate = useNavigate()
+    const location = useLocation()
     const isAuthenticated = authApi.isAuthenticated()
-    // 直接从 localStorage 读取，登录/登出后自动反映最新角色
     const isAdmin = authApi.isAdmin()
 
     const handleLogout = () => {
@@ -15,35 +15,64 @@ const UserHeader = () => {
         navigate("/login")
     }
 
+    const isActive = (path) => location.pathname === path ? "active" : ""
+
     return (
-        <Navbar bg="primary" variant="dark" expand="lg">
+        <Navbar className="app-navbar" expand="lg" variant="dark">
             <Container>
-                <Navbar.Brand as={Link} to="/">
-                    <strong>图书管理系统</strong>
+                <Navbar.Brand as={Link} to="/" className="brand-text">
+                    <span className="brand-icon">&#128218;</span> 图书管理系统
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         {isAuthenticated && (
                             <>
-                                <Nav.Link as={Link} to="/books">图书管理</Nav.Link>
-                                <Nav.Link as={Link} to="/borrow">借阅管理</Nav.Link>
-                                <Nav.Link as={Link} to="/history">借阅历史</Nav.Link>
+                                <Nav.Link
+                                    as={Link}
+                                    to="/books"
+                                    className={`nav-link-custom ${isActive("/books") || isActive("/")}`}
+                                >
+                                    &#128214; 图书管理
+                                </Nav.Link>
+                                <Nav.Link
+                                    as={Link}
+                                    to="/borrow"
+                                    className={`nav-link-custom ${isActive("/borrow")}`}
+                                >
+                                    &#128220; 借阅管理
+                                </Nav.Link>
+                                <Nav.Link
+                                    as={Link}
+                                    to="/history"
+                                    className={`nav-link-custom ${isActive("/history")}`}
+                                >
+                                    &#128337; 借阅历史
+                                </Nav.Link>
+                                {isAdmin && (
+                                    <Nav.Link
+                                        as={Link}
+                                        to="/users"
+                                        className={`nav-link-custom ${isActive("/users")}`}
+                                    >
+                                        &#128101; 用户管理
+                                    </Nav.Link>
+                                )}
                             </>
                         )}
                     </Nav>
                     <Nav className="d-flex align-items-center gap-2">
                         {!isAuthenticated ? (
                             <>
-                                <Nav.Link as={Link} to="/login">登录</Nav.Link>
-                                <Nav.Link as={Link} to="/register">注册</Nav.Link>
+                                <Nav.Link as={Link} to="/login" className="nav-link-custom">登录</Nav.Link>
+                                <Nav.Link as={Link} to="/register" className="nav-link-custom">注册</Nav.Link>
                             </>
                         ) : (
                             <>
-                                <Badge bg={"info"}>
-                                    {isAdmin ? "管理员" : "普通用户 - 只读模式"}
+                                <Badge className="role-badge" bg={isAdmin ? "warning" : "light"}>
+                                    {isAdmin ? "管理员" : "普通用户"}
                                 </Badge>
-                                <Button variant="outline-light" size="sm" onClick={handleLogout}>
+                                <Button className="btn-logout" variant="outline-light" size="sm" onClick={handleLogout}>
                                     退出
                                 </Button>
                             </>

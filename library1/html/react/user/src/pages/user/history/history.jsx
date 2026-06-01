@@ -65,45 +65,58 @@ const History = () => {
 
     return (
         <Container className="mt-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2>借阅历史</h2>
-                <Badge bg={isAdmin ? "danger" : "secondary"}>
+            <div className="page-header">
+                <h2>&#128337; 借阅历史</h2>
+                <Badge bg={isAdmin ? "warning" : "secondary"} className="role-badge">
                     {isAdmin ? "管理员 - 全部记录" : "我的记录"}
                 </Badge>
             </div>
 
             {error && <Alert variant="danger" dismissible onClose={() => setError("")}>{error}</Alert>}
 
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        {isAdmin && <th>用户</th>}
-                        <th>书名</th>
-                        <th>ISBN</th>
-                        <th>操作</th>
-                        <th>日期</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {histories.map((h) => {
-                        const book = bookMap[h.bookId]
-                        return (
-                            <tr key={h.id}>
-                                <td>{h.id}</td>
-                                {isAdmin && <td>{userMap[h.userId] || h.userId}</td>}
-                                <td>{book?.title || "-"}</td>
-                                <td>{book?.isbn || "-"}</td>
-                                <td>{h.behaviour}</td>
-                                <td>{h.date}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
+            <div className="content-card" style={{ padding: 0 }}>
+                <Table hover className="mb-0">
+                    <thead>
+                        <tr>
+                            <th style={{ width: "8%" }}>ID</th>
+                            {isAdmin && <th style={{ width: "14%" }}>用户</th>}
+                            <th style={{ width: "20%" }}>书名</th>
+                            <th style={{ width: "14%" }}>ISBN</th>
+                            <th style={{ width: "12%" }}>操作</th>
+                            <th style={{ width: isAdmin ? "32%" : "46%" }}>日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {histories.map((h) => {
+                            const book = bookMap[h.bookId]
+                            return (
+                                <tr key={h.id}>
+                                    <td><code>{h.id}</code></td>
+                                    {isAdmin && <td><strong>{userMap[h.userId] || h.userId}</strong></td>}
+                                    <td>{book?.title || <span className="text-muted">-</span>}</td>
+                                    <td><small className="text-muted">{book?.isbn || "-"}</small></td>
+                                    <td>
+                                        <Badge bg={
+                                            h.behaviour?.includes("借书") ? "success" :
+                                            h.behaviour?.includes("续借") ? "warning" :
+                                            h.behaviour?.includes("还书") ? "danger" : "secondary"
+                                        }>
+                                            {h.behaviour}
+                                        </Badge>
+                                    </td>
+                                    <td><small>{h.date}</small></td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </Table>
+            </div>
 
             {histories.length === 0 && !error && (
-                <Alert variant="info">暂无借阅历史记录</Alert>
+                <div className="content-card empty-state">
+                    <div className="empty-state-icon">&#128220;</div>
+                    <p>暂无借阅历史记录</p>
+                </div>
             )}
         </Container>
     )

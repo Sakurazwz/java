@@ -1,3 +1,46 @@
-.navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.app-navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    padding: 0.6rem 0;
+}
+
+.brand-text {
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+}
+
+.brand-icon {
+    font-size: 1.4rem;
+}
+
+.nav-link-custom {
+    border-radius: 8px;
+    padding: 0.4rem 0.9rem !important;
+    margin: 0 0.15rem;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.nav-link-custom:hover,
+.nav-link-custom.active {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.role-badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.75em;
+    border-radius: 20px;
+}
+
+.btn-logout {
+    border-radius: 20px !important;
+    padding: 0.3rem 1rem !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
 }

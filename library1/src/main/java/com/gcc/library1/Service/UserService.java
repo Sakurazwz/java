@@ -43,8 +43,19 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public UserResponse updateRole(Long id, String newRole) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found " + id));
+        user.setRole(newRole);
+        return mapper.toUserResponse(userRepository.save(user));
+    }
+
     public List<UserResponse> getAllUsers() {
         return mapper.toUserResponseList(userRepository.findAll());
+    }
+
+    public List<UserResponse> searchUsersByName(String name) {
+        return mapper.toUserResponseList(userRepository.findByNameContainingIgnoreCase(name));
     }
 
     public UserResponse getUserById(Long id) {

@@ -130,9 +130,35 @@ export const userApi = {
         return response.json()
     },
 
-    getAllUsers: async () => {
-        const response = await fetchWithAuth(`${API_BASE_URL}/users/all`)
+    getAllUsers: async (name) => {
+        const url = name
+            ? `${API_BASE_URL}/users/all?name=${encodeURIComponent(name)}`
+            : `${API_BASE_URL}/users/all`
+        const response = await fetchWithAuth(url)
         if (!response.ok) throw new Error("获取用户列表失败")
+        return response.json()
+    },
+
+    deleteUser: async (id) => {
+        const response = await fetchWithAuth(`${API_BASE_URL}/users/delete/${id}`, {
+            method: "DELETE",
+        })
+        if (!response.ok) {
+            const error = await response.text()
+            throw new Error(error)
+        }
+        return response.text()
+    },
+
+    updateRole: async (id, role) => {
+        const response = await fetchWithAuth(`${API_BASE_URL}/users/updateRole/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({ role }),
+        })
+        if (!response.ok) {
+            const error = await response.text()
+            throw new Error(error)
+        }
         return response.json()
     },
 }

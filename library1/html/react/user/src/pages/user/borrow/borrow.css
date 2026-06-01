@@ -1,3 +1,14 @@
-.borrow-container {
-    padding: 20px;
+.overdue-row {
+    background-color: #fff5f5 !important;
+}
+
+.overdue-row:hover {
+    background-color: #ffe8e8 !important;
+}
+
+.overdue-badge {
+    font-size: 0.7rem;
+    padding: 0.15em 0.4em;
+    border-radius: 8px;
+    vertical-align: middle;
 }

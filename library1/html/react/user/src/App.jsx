@@ -7,6 +7,7 @@ import Borrow from './pages/user/borrow/borrow'
 import History from './pages/user/history/history'
 import Login from './pages/user/login/login'
 import AddUser from './pages/user/adduser/adduser'
+import Users from './pages/user/users/users'
 import { authApi } from './services/api'
 import './App.css'
 
@@ -58,6 +59,11 @@ function App() {
                     <Route path="/history" element={
                         <ProtectedRoute>
                             <History />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/users" element={
+                        <ProtectedRoute>
+                            <Users />
                         </ProtectedRoute>
                     } />
                     <Route path="*" element={<Navigate to="/" replace />} />
