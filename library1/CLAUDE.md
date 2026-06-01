@@ -38,7 +38,9 @@ Spring Boot 3.5 / Java 21 application with stateless JWT authentication.
 - `model/` — JPA entities mapped to PostgreSQL tables
 - `repository/` — Spring Data JPA interfaces
 - `service/` — Business logic (borrow/return/renewal workflows live here)
-- `controller/` — REST controllers returning domain objects directly (no DTO layer)
+- `controller/` — REST controllers accepting/returning DTOs
+- `dto/` — Request/Response DTOs (`BookCreateRequest`, `BookUpdateRequest`, `BookResponse`, `UserRegisterRequest`, `UserResponse`, `BorrowRecordCreateRequest`, `BorrowRecordResponse`, `BorrowHistoryDTO`)
+- `dto/mapper/` — `EntityMapper` component for entity ↔ DTO conversion
 - `auth/` — AuthController + JWT token generation/validation + OncePerRequestFilter
 - `config/` — SecurityConfig (CORS, public paths, BCrypt, stateless sessions) + DataInitializer (auto-creates default admin on first run)
 - `util/` — SecurityUtils (static helpers: getCurrentUserId(), isAdmin())
@@ -56,7 +58,7 @@ Spring Boot 3.5 / Java 21 application with stateless JWT authentication.
 
 React 19 SPA using React-Bootstrap. All API calls go through `services/api.js` which wraps `fetch` with auto-injected JWT from `localStorage` and 401/403 redirect handling.
 
-**Routing** (in `App.jsx`): `/login`, `/register`, `/` & `/books` (Books component), `/borrow` (Borrow component), `/history` (History component). Authenticated routes redirect to `/login` if no token.
+**Routing** (in `App.jsx`): `/login`, `/register`, `/` & `/books` (Books component), `/borrow` (Borrow component), `/history` (History component), `/users` (Users component, admin only). Authenticated routes redirect to `/login` if no token.
 
 **Auth:** JWT stored in `localStorage` under `token`. User role parsed from JWT payload. Admin UI elements (add/edit/delete book buttons) shown/hidden by role check.
 
@@ -67,10 +69,13 @@ React 19 SPA using React-Bootstrap. All API calls go through `services/api.js` w
 
 ## Gotchas
 
-- **BorrowHistory behaviour column**: Java field `behaviour` maps to DB column `behaviour` (Hibernate auto-creates from field name). Do NOT add `@Column(name = "behavour")` — the CLAUDE.md comment about misspelling was outdated/incorrect.
+- **BorrowHistory behaviour column**: Java field `behaviour` maps to DB column `behaviour` (Hibernate auto-creates from field name). The `date` field is `LocalDateTime` (not `LocalDate`).
+- **BorrowRecordRepository.findByBookId** returns `List<BorrowRecord>` (not `Optional`), because multiple users can borrow the same book ISBN mapping.
 - **Return book API uses DELETE** (`DELETE /api/borrow/back`) — unconventional but intentional.
 - **User.borrowBook field** is unused legacy — ignore it.
 - **No pagination** on book listing — all books returned in one response.
 - **API base URL hardcoded** to `http://localhost:8080/api` in `html/react/user/src/services/api.js`.
 - **Test DB is H2 in-memory** (test scope only), so tests don't need a running PostgreSQL.
 - **`DataInitializer`** auto-creates admin/admin123 on first startup if no users exist.
+- **`spring-boot-starter-validation`** is explicitly included in pom.xml — Spring Boot 3.x removed it from the web starter. Controllers use `@Valid` on DTO request bodies.
+- **Maven wrapper requires PowerShell `mvnw.cmd`** on Windows — prepend `Set-Item Env:JAVA_HOME 'C:\Users\Xian\.jdks\ms-21.0.10'` before running.
