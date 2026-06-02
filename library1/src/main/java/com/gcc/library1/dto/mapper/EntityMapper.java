@@ -19,6 +19,7 @@ public class EntityMapper {
         dto.setAuthor(book.getAuthor());
         dto.setDescription(book.getDescription());
         dto.setCover(book.getCover());
+        dto.setCategory(book.getCategory());
         dto.setCount(book.getCount());
         dto.setBorrowCount(book.getBorrowCount());
         return dto;
@@ -35,6 +36,7 @@ public class EntityMapper {
         book.setAuthor(request.getAuthor());
         book.setDescription(request.getDescription());
         book.setCover(request.getCover());
+        book.setCategory(request.getCategory());
         book.setCount(request.getCount());
         return book;
     }
@@ -45,6 +47,7 @@ public class EntityMapper {
         book.setAuthor(request.getAuthor());
         book.setDescription(request.getDescription());
         book.setCover(request.getCover());
+        book.setCategory(request.getCategory());
         book.setCount(request.getCount());
     }
 

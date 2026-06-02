@@ -13,7 +13,8 @@ const Books = () => {
     const [error, setError] = useState("")
     const [showModal, setShowModal] = useState(false)
     const [editingBook, setEditingBook] = useState(null)
-    const [formData, setFormData] = useState({ title: "", author: "", description: "", cover: "", isbn: "", count: 1 })
+    const [formData, setFormData] = useState({ title: "", author: "", description: "", cover: "", isbn: "", count: 1, category: "" })
+    const [filterCategory, setFilterCategory] = useState("")
     const [isAdmin, setIsAdmin] = useState(authApi.isAdmin())
     const [viewMode, setViewMode] = useState("card")
     const [currentUser, setCurrentUser] = useState(() => {
@@ -22,6 +23,7 @@ const Books = () => {
     })
     const [borrowingBookId, setBorrowingBookId] = useState(null)
     const [borrowRecords, setBorrowRecords] = useState([])
+    const [detailBook, setDetailBook] = useState(null)
 
     const loadBooks = useCallback(async () => {
         try {
@@ -87,7 +89,7 @@ const Books = () => {
 
     const handleAddClick = () => {
         setEditingBook(null)
-        setFormData({ title: "", author: "", description: "", cover: "", isbn: "", count: 1 })
+        setFormData({ title: "", author: "", description: "", cover: "", isbn: "", count: 1, category: "" })
         setShowModal(true)
     }
 
@@ -100,6 +102,7 @@ const Books = () => {
             cover: book.cover || "",
             isbn: book.isbn || "",
             count: book.count ?? 1,
+            category: book.category || "",
         })
         setShowModal(true)
     }
@@ -198,6 +201,15 @@ const Books = () => {
         return cover || DEFAULT_COVER
     }
 
+    // 从 books 提取不重复的分类列表
+    const categoryOptions = [...new Set(books.map(b => b.category).filter(Boolean))].sort()
+
+    // 按分类过滤后的图书列表
+    const filteredBooks = books.filter(b => {
+        if (filterCategory && b.category !== filterCategory) return false
+        return true
+    })
+
     const handleImgError = (e) => {
         e.target.src = DEFAULT_COVER
     }
@@ -237,25 +249,38 @@ const Books = () => {
             {error && <Alert variant="danger" dismissible onClose={() => setError("")}>{error}</Alert>}
 
             <div className="content-card mb-4">
-                <div className="d-flex gap-2 search-box">
+                <div className="d-flex gap-2 search-box align-items-end" style={{ flexWrap: "wrap" }}>
                     <Form.Control
                         type="text"
                         placeholder="搜索图书标题..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                        style={{ maxWidth: "360px" }}
+                        style={{ maxWidth: "300px" }}
                     />
+                    {categoryOptions.length > 0 && (
+                        <Form.Select
+                            size="sm"
+                            value={filterCategory}
+                            onChange={(e) => setFilterCategory(e.target.value)}
+                            style={{ maxWidth: "180px" }}
+                        >
+                            <option value="">全部分类</option>
+                            {categoryOptions.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </Form.Select>
+                    )}
                     <Button variant="primary" onClick={handleSearch}>&#128269;</Button>
-                    <Button variant="outline-secondary" onClick={loadBooks}>&#128472;</Button>
+                    <Button variant="outline-secondary" onClick={() => { loadBooks(); setFilterCategory(""); setSearchTerm(""); }}>&#128472;</Button>
                 </div>
             </div>
 
             {viewMode === "card" && (
                 <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-                    {books.map((book) => (
+                    {filteredBooks.map((book) => (
                         <Col key={book.id}>
-                            <Card className="book-card h-100">
+                            <Card className="book-card h-100" onClick={() => setDetailBook(book)}>
                                 <div className="book-cover-container">
                                     <img
                                         src={getCoverSrc(book.cover)}
@@ -270,6 +295,11 @@ const Books = () => {
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title className="book-title">{book.title}</Card.Title>
                                     <Card.Subtitle className="mb-2 text-muted">&#9997; {book.author}</Card.Subtitle>
+                                    {book.category && (
+                                        <div className="mb-1">
+                                            <Badge bg="info" className="category-badge">{book.category}</Badge>
+                                        </div>
+                                    )}
                                     {book.isbn && (
                                         <div className="mb-1">
                                             <small className="text-muted">ISBN: {book.isbn}</small>
@@ -283,7 +313,7 @@ const Books = () => {
                                         {book.description?.substring(0, 80) || "暂无简介"}
                                         {book.description?.length > 80 ? "..." : ""}
                                     </Card.Text>
-                                    <div className="mt-auto d-flex gap-2 flex-wrap">
+                                    <div className="mt-auto d-flex gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
                                         {getMyBorrowRecord(book.id) ? (
                                             <>
                                                 <Button variant="warning" size="sm" onClick={() => handleRenew(book.id)}>
@@ -329,6 +359,7 @@ const Books = () => {
                                 <th style={{ width: "90px" }}>封面</th>
                                 <th>标题 / 作者</th>
                                 <th>ISBN</th>
+                                <th>分类</th>
                                 <th>库存</th>
                                 <th>已借</th>
                                 <th>简介</th>
@@ -336,7 +367,7 @@ const Books = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {books.map((book) => (
+                            {filteredBooks.map((book) => (
                                 <tr key={book.id}>
                                     <td>
                                         <img
@@ -352,6 +383,7 @@ const Books = () => {
                                         <small className="text-muted">{book.author}</small>
                                     </td>
                                     <td><small>{book.isbn || "-"}</small></td>
+                                    <td>{book.category ? <Badge bg="info">{book.category}</Badge> : "-"}</td>
                                     <td><Badge bg={book.count > 0 ? "success" : "danger"}>{book.count ?? 0}</Badge></td>
                                     <td>{book.borrowCount ?? 0}</td>
                                     <td className="text-muted" style={{ maxWidth: "180px" }}>
@@ -389,7 +421,7 @@ const Books = () => {
                 </div>
             )}
 
-            {books.length === 0 && !error && (
+            {filteredBooks.length === 0 && !error && (
                 <div className="content-card empty-state">
                     <div className="empty-state-icon">&#128214;</div>
                     <p>暂无图书数据</p>
@@ -485,17 +517,39 @@ const Books = () => {
                                     </div>
                                 )}
                             </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>简介</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    name="description"
-                                    rows={3}
-                                    value={formData.description}
-                                    onChange={handleFormChange}
-                                    placeholder="请输入图书简介（可选）"
-                                />
-                            </Form.Group>
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>分类</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="category"
+                                            value={formData.category}
+                                            onChange={handleFormChange}
+                                            placeholder="如：文学、科技、历史..."
+                                            list="category-suggestions"
+                                        />
+                                        <datalist id="category-suggestions">
+                                            {categoryOptions.map(cat => (
+                                                <option key={cat} value={cat} />
+                                            ))}
+                                        </datalist>
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>简介</Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            name="description"
+                                            rows={3}
+                                            value={formData.description}
+                                            onChange={handleFormChange}
+                                            placeholder="请输入图书简介（可选）"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
@@ -506,6 +560,74 @@ const Books = () => {
                     </Modal.Footer>
                 </Modal>
             )}
+
+            {/* 图书详情弹窗 */}
+            <Modal show={!!detailBook} onHide={() => setDetailBook(null)} size="lg">
+                {detailBook && (
+                    <>
+                        <Modal.Header closeButton>
+                            <Modal.Title>&#128214; {detailBook.title}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Row>
+                                <Col md={5}>
+                                    <div className="detail-cover-wrapper">
+                                        <img
+                                            src={getCoverSrc(detailBook.cover)}
+                                            onError={handleImgError}
+                                            alt={detailBook.title}
+                                            className="detail-cover-img"
+                                        />
+                                    </div>
+                                </Col>
+                                <Col md={7}>
+                                    <h4>{detailBook.title}</h4>
+                                    <p className="text-muted mb-2">&#9997; {detailBook.author}</p>
+                                    {detailBook.category && (
+                                        <div className="mb-2">
+                                            <Badge bg="info">{detailBook.category}</Badge>
+                                        </div>
+                                    )}
+                                    {detailBook.isbn && (
+                                        <p className="mb-1"><strong>ISBN:</strong> {detailBook.isbn}</p>
+                                    )}
+                                    <div className="mb-2">
+                                        <span className="stock-badge me-2">库存 {detailBook.count ?? 0}</span>
+                                        <span className="borrow-badge">已借 {detailBook.borrowCount ?? 0}</span>
+                                    </div>
+                                    <hr />
+                                    <h6>简介</h6>
+                                    <p className="text-muted" style={{ whiteSpace: "pre-wrap" }}>
+                                        {detailBook.description || "暂无简介"}
+                                    </p>
+                                </Col>
+                            </Row>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setDetailBook(null)}>关闭</Button>
+                            {getMyBorrowRecord(detailBook.id) ? (
+                                <>
+                                    <Button variant="warning" onClick={() => { handleRenew(detailBook.id); setDetailBook(null); }}>续借</Button>
+                                    <Button variant="danger" onClick={() => { handleReturn(detailBook.id); setDetailBook(null); }}>还书</Button>
+                                </>
+                            ) : (
+                                <Button
+                                    variant="success"
+                                    disabled={borrowingBookId === detailBook.id || (detailBook.count ?? 0) <= 0}
+                                    onClick={() => { handleBorrow(detailBook.id); setDetailBook(null); }}
+                                >
+                                    {(detailBook.count ?? 0) <= 0 ? "已借完" : "借书"}
+                                </Button>
+                            )}
+                            {isAdmin && (
+                                <Button variant="outline-warning" onClick={() => { setDetailBook(null); handleEditClick(detailBook); }}>
+                                    编辑
+                                </Button>
+                            )}
+                        </Modal.Footer>
+                    </>
+                )}
+            </Modal>
         </Container>
     )
 }

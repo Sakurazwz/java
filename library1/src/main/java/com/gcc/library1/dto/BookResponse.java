@@ -14,6 +14,7 @@ public class BookResponse {
     private String author;
     private String description;
     private String cover;
+    private String category;
     private int count;
     private int borrowCount;
 }

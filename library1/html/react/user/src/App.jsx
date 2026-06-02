@@ -8,6 +8,8 @@ import History from './pages/user/history/history'
 import Login from './pages/user/login/login'
 import AddUser from './pages/user/adduser/adduser'
 import Users from './pages/user/users/users'
+import UserProfile from './pages/user/profile/profile'
+import Overview from './pages/user/overview/overview'
 import AiRecommend from './components/AiRecommend'
 import { authApi } from './services/api'
 import './App.css'
@@ -61,6 +63,16 @@ function App() {
                     <Route path="/history" element={
                         <ProtectedRoute>
                             <History />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/profile" element={
+                        <ProtectedRoute>
+                            <UserProfile />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/overview" element={
+                        <ProtectedRoute>
+                            <Overview />
                         </ProtectedRoute>
                     } />
                     <Route path="/users" element={

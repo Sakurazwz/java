@@ -242,12 +242,12 @@ const Borrow = () => {
                                     </div>
                                     <div className="borrow-card-header">
                                         <span className="borrow-id">#{borrow.id}</span>
-                                        <span className="borrow-user">{userMap[borrow.userId] || borrow.userId}</span>
+                                        <span className="borrow-user">借阅人: {userMap[borrow.userId] || borrow.userId}</span>
                                     </div>
                                     <Card.Body className="d-flex flex-column">
-                                        <Card.Title className="book-title">{book?.title || "未知书名"}</Card.Title>
+                                        <Card.Title className="book-title">书名: {book?.title || "未知书名"}</Card.Title>
                                         <Card.Subtitle className="mb-2 text-muted">
-                                            {book?.author || ""}
+                                            作者: {book?.author || ""}
                                         </Card.Subtitle>
                                         <div className="borrow-info">
                                             <div className="borrow-info-item">
@@ -311,9 +311,9 @@ const Borrow = () => {
                                     <tr key={borrow.id} className={isOverdue ? "overdue-row" : ""}>
                                         <td><code>{borrow.id}</code></td>
                                         <td>{borrow.bookId}</td>
-                                        <td><strong>{book?.title || "-"}</strong></td>
-                                        <td><small className="text-muted">{book?.isbn || "-"}</small></td>
-                                        <td>{userMap[borrow.userId] || borrow.userId}</td>
+                                        <td><strong>书名: {book?.title || "-"}</strong></td>
+                                        <td><small className="text-muted">ISBN: {book?.isbn || "-"}</small></td>
+                                        <td>用户: {userMap[borrow.userId] || borrow.userId}</td>
                                         <td>{borrow.borrowDate}</td>
                                         <td>
                                             {borrow.returnDate}

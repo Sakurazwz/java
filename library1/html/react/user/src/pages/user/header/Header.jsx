@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react"
 import { Nav, Badge } from "react-bootstrap"
 import { Navbar, Container, Button } from "react-bootstrap"
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { authApi } from "../../../services/api"
+import { authApi, borrowApi } from "../../../services/api"
 import "./Header.css"
 
 const UserHeader = () => {
@@ -9,6 +10,17 @@ const UserHeader = () => {
     const location = useLocation()
     const isAuthenticated = authApi.isAuthenticated()
     const isAdmin = authApi.isAdmin()
+    const [overdueCount, setOverdueCount] = useState(0)
+
+    useEffect(() => {
+        if (isAuthenticated && isAdmin) {
+            borrowApi.getAllBorrows().then(borrows => {
+                const today = new Date().toISOString().slice(0, 10)
+                const count = borrows.filter(b => b.returnDate && b.returnDate < today).length
+                setOverdueCount(count)
+            }).catch(() => {})
+        }
+    }, [isAuthenticated, isAdmin])
 
     const handleLogout = () => {
         authApi.logout()
@@ -50,13 +62,25 @@ const UserHeader = () => {
                                     &#128337; 借阅历史
                                 </Nav.Link>
                                 {isAdmin && (
-                                    <Nav.Link
-                                        as={Link}
-                                        to="/users"
-                                        className={`nav-link-custom ${isActive("/users")}`}
-                                    >
-                                        &#128101; 用户管理
-                                    </Nav.Link>
+                                    <>
+                                        <Nav.Link
+                                            as={Link}
+                                            to="/users"
+                                            className={`nav-link-custom ${isActive("/users")}`}
+                                        >
+                                            &#128101; 用户管理
+                                        </Nav.Link>
+                                        <Nav.Link
+                                            as={Link}
+                                            to="/overview"
+                                            className={`nav-link-custom overview-nav-link ${isActive("/overview")}`}
+                                        >
+                                            &#128202; 馆藏概览
+                                            {overdueCount > 0 && (
+                                                <Badge bg="danger" className="overview-count-badge">{overdueCount}</Badge>
+                                            )}
+                                        </Nav.Link>
+                                    </>
                                 )}
                             </>
                         )}
@@ -69,6 +93,9 @@ const UserHeader = () => {
                             </>
                         ) : (
                             <>
+                                <Nav.Link as={Link} to="/profile" className="nav-link-custom">
+                                    &#128100; {authApi.getCurrentUser()?.name || "用户"}
+                                </Nav.Link>
                                 <Badge className="role-badge" bg={isAdmin ? "warning" : "primary"}>
                                     {isAdmin ? "管理员" : "普通用户"}
                                 </Badge>

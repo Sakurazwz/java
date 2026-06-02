@@ -27,6 +27,9 @@ public class Book {
     @Column(columnDefinition = "TEXT")
     private String cover;
 
+    // 图书分类
+    private String category;
+
     // 库存数量
     @Column(nullable = false)
     private int count = 0;

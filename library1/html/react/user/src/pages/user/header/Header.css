@@ -44,3 +44,23 @@
 .btn-logout:hover {
     background: rgba(255, 255, 255, 0.25) !important;
 }
+
+/* 馆藏概览导航项 */
+.overview-nav-link {
+    position: relative;
+}
+
+.overview-count-badge {
+    position: absolute;
+    top: 2px;
+    right: -2px;
+    font-size: 0.6rem;
+    padding: 0.15em 0.4em;
+    border-radius: 10px;
+    animation: overview-pulse 2s infinite;
+}
+
+@keyframes overview-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}

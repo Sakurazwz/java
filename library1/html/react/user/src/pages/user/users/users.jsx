@@ -72,7 +72,7 @@ const Users = () => {
 
     if (!isAdmin) {
         return (
-            <Container className="mt-5" style={{ maxWidth: "80%" }}>
+            <Container className="mt-5">
                 <div className="content-card">
                     <Alert variant="danger" className="mb-0">
                         无权限：仅管理员可访问用户管理
@@ -83,7 +83,7 @@ const Users = () => {
     }
 
     return (
-        <Container className="mt-4" style={{ maxWidth: "80%" }}>
+        <Container className="mt-4">
             <div className="page-header">
                 <h2>&#128101; 用户管理</h2>
                 <Badge className="role-badge" bg="primary">

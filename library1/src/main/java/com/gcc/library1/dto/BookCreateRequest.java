@@ -22,6 +22,8 @@ public class BookCreateRequest {
 
     private String cover;
 
+    private String category;
+
     @PositiveOrZero
     private int count;
 }

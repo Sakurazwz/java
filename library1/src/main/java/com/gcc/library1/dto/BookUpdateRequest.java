@@ -25,5 +25,7 @@ public class BookUpdateRequest {
 
     private String cover;
 
+    private String category;
+
     private int count;
 }
