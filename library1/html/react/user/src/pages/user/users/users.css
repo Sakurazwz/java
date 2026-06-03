@@ -1,19 +1,14 @@
-.self-badge {
-    font-size: 0.75rem;
-    padding: 0.15em 0.45em;
-    border-radius: 10px;
-}
+/* 用户管理页面样式（使用 App.css 全局样式） */
 
-.role-badge {
-    font-size: 0.82rem;
-    padding: 0.3em 0.6em;
+/* 搜索输入框 */
+.search-box .form-control {
     border-radius: 10px;
-}
-
-code {
-    background: #f0f0ff;
-    color: #667eea;
-    padding: 0.15em 0.5em;
-    border-radius: 4px;
+    border: 1.5px solid rgba(102, 126, 234, 0.15);
+    transition: border-color 0.2s, box-shadow 0.2s;
     font-size: 0.9rem;
+}
+
+.search-box .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.12);
 }

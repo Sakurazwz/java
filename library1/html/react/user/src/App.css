@@ -1,13 +1,55 @@
 /* ── 全局基础 ── */
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #f0f2ff 0%, #e8ecf8 50%, #dfe6f5 100%);
+    background-attachment: fixed;
     min-height: 100vh;
+    color: #2d3748;
+    -webkit-font-smoothing: antialiased;
 }
 
 #root {
     min-height: 100vh;
+}
+
+/* ── 滚动条美化 ── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.25);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.45);
+}
+
+/* ── 页面入场动画 ── */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mt-4, .mt-3, .mt-5 {
+    animation: fadeSlideIn 0.35s ease-out;
 }
 
 /* ── 页面标题 ── */
@@ -16,15 +58,19 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
-    background: white;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 1.25rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(102, 126, 234, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .page-header h2 {
     margin: 0;
-    font-weight: 700;
+    font-weight: 800;
+    font-size: 1.4rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -33,11 +79,14 @@ body {
 
 /* ── 全局卡片容器 ── */
 .content-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(102, 126, 234, 0.06);
     padding: 1.5rem;
     margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 /* ── 表格美化 ── */
@@ -50,110 +99,201 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     font-weight: 600;
+    font-size: 0.88rem;
     border: none;
-    padding: 0.75rem 1rem;
+    padding: 0.8rem 1rem;
+    letter-spacing: 0.3px;
 }
 
 .table thead th:first-child {
-    border-radius: 8px 0 0 0;
+    border-radius: 10px 0 0 0;
 }
 
 .table thead th:last-child {
-    border-radius: 0 8px 0 0;
+    border-radius: 0 10px 0 0;
 }
 
 .table tbody td {
     padding: 0.75rem 1rem;
     vertical-align: middle;
+    border-color: rgba(0, 0, 0, 0.04);
+    font-size: 0.9rem;
+}
+
+.table tbody tr {
+    transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .table tbody tr:hover {
-    background-color: #f0f0ff;
-    transition: background-color 0.15s ease;
+    background-color: rgba(102, 126, 234, 0.06) !important;
 }
 
 /* ── 搜索框美化 ── */
 .search-box .form-control {
-    border-radius: 8px 0 0 8px;
-    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    border: 1.5px solid rgba(102, 126, 234, 0.15);
     transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 0.9rem;
 }
 
 .search-box .form-control:focus {
     border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.12);
 }
 
 .search-box .btn {
-    border-radius: 0 8px 8px 0;
+    border-radius: 10px;
+}
+
+.search-box .form-select {
+    border-radius: 10px;
+    border: 1.5px solid rgba(102, 126, 234, 0.15);
+    font-size: 0.9rem;
+}
+
+.search-box .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.12);
+}
+
+/* ── 表单控件统一 ── */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1.5px solid #dee2e6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 0.9rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.12);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #4a5568;
 }
 
 /* ── 按钮通用美化 ── */
 .btn {
-    border-radius: 8px;
-    font-weight: 500;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
     transition: all 0.2s ease;
+    letter-spacing: 0.2px;
 }
 
 .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .btn:active {
     transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-sm {
+    border-radius: 8px;
+    font-size: 0.82rem;
 }
 
 /* ── 模态框美化 ── */
 .modal-content {
-    border-radius: 16px;
+    border-radius: 20px;
     border: none;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 24px 64px rgba(102, 126, 234, 0.18);
+    overflow: hidden;
 }
 
 .modal-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    border-radius: 16px 16px 0 0;
     border: none;
-    padding: 1rem 1.5rem;
+    padding: 1.1rem 1.5rem;
 }
 
 .modal-header .btn-close {
     filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
 }
 
 .modal-title {
     font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1rem 1.5rem;
 }
 
 /* ── Alert 美化 ── */
 .alert {
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    font-size: 0.9rem;
 }
 
 /* ── Badge 美化 ── */
 .badge {
-    font-weight: 500;
-    padding: 0.35em 0.65em;
-    border-radius: 6px;
+    font-weight: 600;
+    padding: 0.35em 0.7em;
+    border-radius: 8px;
+    letter-spacing: 0.2px;
 }
 
 /* ── 空状态 ── */
 .empty-state {
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 3.5rem 1rem;
 }
 
 .empty-state-icon {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 1rem;
-    opacity: 0.3;
+    opacity: 0.25;
+    filter: grayscale(0.5);
 }
 
 .empty-state p {
-    color: #6c757d;
-    font-size: 1.1rem;
+    color: #718096;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+/* ── code 标签 ── */
+code {
+    background: linear-gradient(135deg, #eef0ff 0%, #f3eeff 100%);
+    color: #667eea;
+    padding: 0.15em 0.55em;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+/* ── 链接美化 ── */
+a {
+    color: #667eea;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #764ba2;
+}
+
+/* ── 小标签 ── */
+small.text-muted {
+    color: #a0aec0 !important;
+    font-size: 0.82rem;
 }
