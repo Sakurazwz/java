@@ -105,9 +105,8 @@ function showApiUrlDialog() {
     parent: mainWindow,
     modal: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
+      contextIsolation: false,  // 允许 require
+      nodeIntegration: true,    // 允许 require
     },
   })
 
@@ -148,9 +147,10 @@ function showApiUrlDialog() {
 
   ipcMain.once('api-url-result', (event, value) => {
     if (value) {
-      config.apiUrl = value
-      saveConfig(config)
-      dialog.showMessageBox(mainWindow, {
+      const cfg = loadConfig()
+      cfg.apiUrl = value
+      saveConfig(cfg)
+      dialog.showMessageBox(mainWindow || null, {
         type: 'info',
         title: '设置已保存',
         message: 'API 地址已更新，重启应用后生效。',
@@ -191,7 +191,7 @@ function createMenu() {
         {
           label: '关于',
           click: () => {
-            dialog.showMessageBox(mainWindow, {
+            dialog.showMessageBox(mainWindow || null, {
               type: 'info',
               title: '关于',
               message: '图书管理系统',
