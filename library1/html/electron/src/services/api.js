@@ -1,5 +1,23 @@
 // 全局 API 服务，封装所有后端接口调用
-const API_BASE_URL = "http://localhost:8080/api"
+// 支持 Electron 环境下可配置的 API 地址
+let API_BASE_URL = "http://localhost:8080/api"
+
+// 初始化 API 地址（Electron 环境下从主进程获取）
+const initApiUrl = async () => {
+  if (window.electron && window.electron.isElectron) {
+    try {
+      API_BASE_URL = await window.electron.getApiUrl()
+    } catch (e) {
+      console.error("获取 API 地址失败:", e)
+    }
+  }
+}
+
+// 立即初始化
+initApiUrl()
+
+// 获取当前 API 地址
+export const getApiBaseUrl = () => API_BASE_URL
 
 // 获取 JWT Token
 const getToken = () => localStorage.getItem("token")
