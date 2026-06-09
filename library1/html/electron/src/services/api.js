@@ -3,7 +3,8 @@
 let API_BASE_URL = "http://localhost:8080/api"
 
 // 初始化 API 地址（Electron 环境下从主进程获取）
-const initApiUrl = async () => {
+// 导出供 main.jsx 在渲染前等待初始化完成，避免竞态条件
+export const initApiUrl = async () => {
   if (window.electron && window.electron.isElectron) {
     try {
       API_BASE_URL = await window.electron.getApiUrl()
@@ -12,9 +13,6 @@ const initApiUrl = async () => {
     }
   }
 }
-
-// 立即初始化
-initApiUrl()
 
 // 获取当前 API 地址
 export const getApiBaseUrl = () => API_BASE_URL
