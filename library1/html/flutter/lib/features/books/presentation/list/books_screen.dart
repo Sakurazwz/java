@@ -22,6 +22,61 @@ class _BooksScreenState extends State<BooksScreen> {
     super.dispose();
   }
 
+  // 显示智能推荐对话框
+  void _showRecommendDialog(BuildContext context) {
+    final recommendController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.auto_awesome, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('智能图书推荐'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('告诉我你的兴趣或需求，我为你推荐图书'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: recommendController,
+              decoration: const InputDecoration(
+                hintText: '例如：科幻小说、编程入门、历史类...',
+                border: OutlineInputBorder(),
+              ),
+              autofocus: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final query = recommendController.text.trim();
+              if (query.isNotEmpty) {
+                context.read<BooksBloc>().add(
+                      BooksRecommendRequested(query: query),
+                    );
+                Navigator.pop(dialogContext);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('推荐'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isAdmin = TokenStorage.isAdmin();
@@ -34,49 +89,61 @@ class _BooksScreenState extends State<BooksScreen> {
           if (isAdmin)
             IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => context.go('/books/add'),
+              onPressed: () => context.push('/books/add'),
             ),
         ],
       ),
       drawer: const AppDrawer(),
       body: BlocProvider(
         create: (context) => BooksBloc()..add(BooksLoadRequested()),
-        child: Column(
-          children: [
-            // 搜索栏
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        hintText: '搜索图书...',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(),
+        child: Builder(
+          builder: (builderContext) => Column(
+            children: [
+              // 搜索栏
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          hintText: '搜索图书...',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () {
-                      final query = _searchController.text.trim();
-                      if (query.isNotEmpty) {
-                        context.read<BooksBloc>().add(
-                              BooksSearchRequested(query: query),
-                            );
-                      }
-                    },
-                    child: const Text('搜索'),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        final query = _searchController.text.trim();
+                        if (query.isNotEmpty) {
+                          builderContext.read<BooksBloc>().add(
+                                BooksSearchRequested(query: query),
+                              );
+                        }
+                      },
+                      child: const Text('搜索'),
+                    ),
+                    const SizedBox(width: 8),
+                    // 智能推荐按钮
+                    ElevatedButton.icon(
+                      onPressed: () => _showRecommendDialog(builderContext),
+                      icon: const Icon(Icons.auto_awesome),
+                      label: const Text('推荐'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            // 图书列表
-            Expanded(
-              child: BlocBuilder<BooksBloc, BooksState>(
-                builder: (context, state) {
+              // 图书列表
+              Expanded(
+                child: BlocBuilder<BooksBloc, BooksState>(
+                  builder: (context, state) {
                   if (state is BooksLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is BooksLoaded) {
@@ -149,6 +216,7 @@ class _BooksScreenState extends State<BooksScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

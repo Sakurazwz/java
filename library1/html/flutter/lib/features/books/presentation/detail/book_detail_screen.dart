@@ -48,6 +48,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/books'),
+        ),
         title: const Text('图书详情'),
         actions: [
           // 管理员可编辑图书

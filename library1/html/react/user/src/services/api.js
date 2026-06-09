@@ -1,5 +1,5 @@
-// 全局 API 服务，封装所有后端接口调用
-const API_BASE_URL = "http://localhost:8080/api"
+    // 全局 API 服务，封装所有后端接口调用
+const API_BASE_URL = "http://8.163.28.84:1100/api"
 
 // 获取 JWT Token
 const getToken = () => localStorage.getItem("token")

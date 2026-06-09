@@ -25,6 +25,16 @@ class BooksSearchRequested extends BooksEvent {
 // 刷新图书列表
 class BooksRefreshRequested extends BooksEvent {}
 
+// 智能推荐图书
+class BooksRecommendRequested extends BooksEvent {
+  final String query;
+
+  BooksRecommendRequested({required this.query});
+
+  @override
+  List<Object?> get props => [query];
+}
+
 // 图书列表状态
 abstract class BooksState extends Equatable {
   @override
@@ -65,6 +75,7 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
     on<BooksLoadRequested>(_onLoadRequested);
     on<BooksSearchRequested>(_onSearchRequested);
     on<BooksRefreshRequested>(_onRefreshRequested);
+    on<BooksRecommendRequested>(_onRecommendRequested);
   }
 
   // 处理加载事件
@@ -102,6 +113,20 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
   ) async {
     try {
       final books = await _bookRepository.getAllBooks();
+      emit(BooksLoaded(books: books));
+    } catch (e) {
+      emit(BooksError(message: e.toString()));
+    }
+  }
+
+  // 处理智能推荐事件
+  Future<void> _onRecommendRequested(
+    BooksRecommendRequested event,
+    Emitter<BooksState> emit,
+  ) async {
+    emit(BooksLoading());
+    try {
+      final books = await _bookRepository.recommend(event.query);
       emit(BooksLoaded(books: books));
     } catch (e) {
       emit(BooksError(message: e.toString()));

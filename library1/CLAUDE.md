@@ -64,8 +64,27 @@ React 19 SPA using React-Bootstrap. All API calls go through `services/api.js` w
 
 **Cover images:** Uploaded as files, converted to Base64 in the browser, sent as JSON strings to the backend, stored in `books.cover` (TEXT column).
 
-### Dual frontend note
-`html/src/` is a stale copy of the old frontend — `html/react/user/` is the active React SPA. Thymeleaf templates (`src/main/resources/templates/`) also exist but are vestigial. New features should only touch `html/react/user/`.
+### Flutter Mobile — `html/flutter/`
+
+Flutter 3.x 移动客户端，使用 BLoC 状态管理 + Dio 网络请求 + GoRouter 路由。
+
+```bash
+cd html/flutter
+flutter pub get        # 安装依赖
+flutter run            # 运行（需要连接设备或模拟器）
+flutter build apk      # 构建 Android APK
+flutter build ios      # 构建 iOS（需要 macOS）
+flutter test           # 运行测试
+flutter analyze        # 代码分析
+```
+
+**架构：** `lib/features/` 按功能模块划分（auth, books, borrow, history, users, profile），每模块含 data/domain/presentation 三层。API 配置在 `lib/config/api_config.dart`。
+
+### Frontend notes
+- `html/react/user/` 是主 React SPA，`html/src/` 是旧版前端已废弃
+- Thymeleaf 模板（`src/main/resources/templates/`）已废弃
+- 新功能优先实现 React 版本，Flutter 按需同步
+- 所有前端共享同一后端 API，API 地址在各自配置文件中设置
 
 ## Gotchas
 

@@ -56,8 +56,8 @@ class AppDrawer extends StatelessWidget {
               leading: const Icon(Icons.person),
               title: const Text('个人中心'),
               onTap: () {
-                context.go('/profile');
                 Navigator.pop(context);
+                context.push('/profile');
               },
             ),
             if (isAdmin) ...[
