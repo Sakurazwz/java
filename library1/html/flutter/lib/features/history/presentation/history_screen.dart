@@ -52,7 +52,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           _getBehaviourIcon(record.behaviour),
                           color: _getBehaviourColor(record.behaviour),
                         ),
-                        title: Text(record.bookTitle),
+                        title: Text('图书 ID: ${record.bookId}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

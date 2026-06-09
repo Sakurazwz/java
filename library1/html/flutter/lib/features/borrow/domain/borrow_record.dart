@@ -3,8 +3,6 @@ class BorrowRecord {
   final int id;
   final int bookId;
   final int userId;
-  final String bookTitle;
-  final String userName;
   final DateTime borrowDate;
   final DateTime returnDate;
 
@@ -12,8 +10,6 @@ class BorrowRecord {
     required this.id,
     required this.bookId,
     required this.userId,
-    required this.bookTitle,
-    required this.userName,
     required this.borrowDate,
     required this.returnDate,
   });
@@ -24,8 +20,6 @@ class BorrowRecord {
       id: json['id'] ?? 0,
       bookId: json['bookId'] ?? 0,
       userId: json['userId'] ?? 0,
-      bookTitle: json['bookTitle'] ?? '',
-      userName: json['userName'] ?? '',
       borrowDate: DateTime.parse(
           json['borrowDate'] ?? DateTime.now().toIso8601String()),
       returnDate: DateTime.parse(

@@ -57,7 +57,7 @@ class _BorrowScreenState extends State<BorrowScreen> {
                           vertical: 4,
                         ),
                         child: ListTile(
-                          title: Text(record.bookTitle),
+                          title: Text('图书 ID: ${record.bookId}'),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
