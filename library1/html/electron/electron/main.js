@@ -145,7 +145,8 @@ function showApiUrlDialog() {
 
   promptWindow.loadURL(`data:text/html,${encodeURIComponent(html)}`)
 
-  ipcMain.once('api-url-result', (event, value) => {
+  // 定义 IPC 处理函数，便于后续清理
+  const handleApiUrlResult = (event, value) => {
     if (value) {
       const cfg = loadConfig()
       cfg.apiUrl = value
@@ -156,6 +157,14 @@ function showApiUrlDialog() {
         message: 'API 地址已更新，重启应用后生效。',
       })
     }
+  }
+
+  // 注册 IPC 监听器
+  ipcMain.on('api-url-result', handleApiUrlResult)
+
+  // 窗口关闭时清理监听器，防止用户直接关闭窗口导致监听器泄漏
+  promptWindow.on('closed', () => {
+    ipcMain.removeListener('api-url-result', handleApiUrlResult)
   })
 }
 
